@@ -45,7 +45,11 @@ CORE_FILES = [
     "templates/module-template.md",
     "templates/api-contract-template.md",
     "templates/decision-record-template.md",
-    "docs/decisions/README.md"
+    "docs/decisions/README.md",
+    ".agents/skills/doc-harness/SKILL.md",
+    ".agents/skills/design-interviewer/SKILL.md",
+    "scripts/generate_invariant_tests.py",
+    ".devcontainer/devcontainer.json"
 ]
 
 def run_step(title: str, command: list) -> bool:

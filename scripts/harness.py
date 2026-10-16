@@ -71,6 +71,11 @@ def main():
     bootstrap_parser.add_argument("--name", required=True, help="Project name")
     bootstrap_parser.add_argument("--description", default="New project bootstrapped from agentic template", help="Project description")
 
+    # Test-gen / invariants command
+    testgen_parser = subparsers.add_parser("test-gen", help="Generate invariant test stubs from documentation")
+    testgen_parser.add_argument("--output", "-o", default="tests/test_invariants.py", help="Output test file path")
+    testgen_parser.add_argument("--check", action="store_true", help="Audit if test file covers all invariants")
+
     # Install hooks command
     subparsers.add_parser("install-hooks", help="Install local Git pre-commit hooks")
 
@@ -101,6 +106,11 @@ def main():
         sys.exit(run_script("record_decision.py", ["--adr", args.title, "--context", args.context] + unknown))
     elif args.command == "append":
         sys.exit(run_script("record_decision.py", ["--append", args.target, args.decision] + unknown))
+    elif args.command == "test-gen":
+        cli_args = ["--output", args.output]
+        if args.check:
+            cli_args.append("--check")
+        sys.exit(run_script("generate_invariant_tests.py", cli_args + unknown))
     elif args.command == "bootstrap":
         sys.exit(run_script("bootstrap_project.py", ["--name", args.name, "--description", args.description] + unknown))
     elif args.command == "install-hooks":
