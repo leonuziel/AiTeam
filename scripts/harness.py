@@ -76,6 +76,19 @@ def main():
     testgen_parser.add_argument("--output", "-o", default="tests/test_invariants.py", help="Output test file path")
     testgen_parser.add_argument("--check", action="store_true", help="Audit if test file covers all invariants")
 
+    # Resolve command
+    resolve_parser = subparsers.add_parser("resolve", help="Resolve a design fork and sync docs & ADRs")
+    resolve_parser.add_argument("--title", help="Decision title")
+    resolve_parser.add_argument("--target", help="Target document path")
+    resolve_parser.add_argument("--choice", help="Selected option summary")
+    resolve_parser.add_argument("--context", default="", help="Context & trade-off rationale")
+    resolve_parser.add_argument("--interactive", action="store_true", help="Launch interactive prompt")
+
+    # Index command
+    index_parser = subparsers.add_parser("index", help="Generate or audit living documentation index")
+    index_parser.add_argument("--check", action="store_true", help="Audit if index covers all documents")
+    index_parser.add_argument("--output", "-o", default="docs/INDEX.md", help="Output index path")
+
     # Install hooks command
     subparsers.add_parser("install-hooks", help="Install local Git pre-commit hooks")
 
@@ -106,6 +119,24 @@ def main():
         sys.exit(run_script("record_decision.py", ["--adr", args.title, "--context", args.context] + unknown))
     elif args.command == "append":
         sys.exit(run_script("record_decision.py", ["--append", args.target, args.decision] + unknown))
+    elif args.command == "resolve":
+        cli_args = []
+        if args.title:
+            cli_args += ["--title", args.title]
+        if args.target:
+            cli_args += ["--target", args.target]
+        if args.choice:
+            cli_args += ["--choice", args.choice]
+        if args.context:
+            cli_args += ["--context", args.context]
+        if args.interactive:
+            cli_args += ["--interactive"]
+        sys.exit(run_script("resolve_question.py", cli_args + unknown))
+    elif args.command == "index":
+        cli_args = ["--output", args.output]
+        if args.check:
+            cli_args.append("--check")
+        sys.exit(run_script("generate_doc_index.py", cli_args + unknown))
     elif args.command == "test-gen":
         cli_args = ["--output", args.output]
         if args.check:

@@ -267,12 +267,22 @@ Every directory in this repository has a strict, unambiguous purpose:
 │       ├── code_review_loop.md         # 4-step invariant and parity review gate
 │       └── continuous_cleanliness_loop.md # 5-point repository hygiene maintenance checklist
 ├── .agents/
+│   ├── skills/                         # Native Antigravity IDE skills
+│   │   ├── doc-harness/SKILL.md        # Harness CLI commands & operating cheatsheet
+│   │   └── design-interviewer/SKILL.md # Escalation interview & ADR protocol
 │   └── rules/
 │       └── doc_to_code_invariants.md   # Native Antigravity IDE workspace rules
+├── .devcontainer/
+│   └── devcontainer.json               # 1-click Codespaces & Docker environment
+├── .githooks/
+│   └── pre-commit                      # Local pre-commit gate (lint + parity checks)
 ├── .github/
-│   └── workflows/
-│       └── agentic_ci.yml              # GitHub Actions CI for continuous health audits
+│   ├── workflows/
+│   │   └── agentic_ci.yml              # GitHub Actions CI for continuous health audits
+│   ├── ISSUE_TEMPLATE/                 # Feature proposals & design escalation issues
+│   └── PULL_REQUEST_TEMPLATE.md        # Mandatory doc-to-code PR compliance checklist
 ├── docs/                               # 📖 The Living Single Source of Truth
+│   ├── INDEX.md                        # Living documentation catalog & dependency map
 │   ├── ARCHITECTURE.md                 # System topology, routing map & agent roles
 │   ├── product/                        # "What" & "Why" (Requirements, Personas, Flows)
 │   │   ├── overview.md                 # High-level product value prop & user personas
@@ -292,21 +302,27 @@ Every directory in this repository has a strict, unambiguous purpose:
 │   └── decisions/                      # 🏛️ Architecture Decision Records (ADRs)
 │       └── README.md                   # ADR governance & lifecycle guide
 ├── scripts/                            # 🛠️ Autonomous Maintenance Tooling (Python 3.8+)
-│   ├── audit_repo.py                   # Master health & readiness auditor (27-point check)
+│   ├── harness.py                      # 🚀 Unified Doc-to-Code CLI Entry Point
+│   ├── audit_repo.py                   # Master health & readiness auditor (42-point check)
 │   ├── lint_docs.py                    # 4-section documentation & link integrity linter
 │   ├── check_doc_drift.py              # Doc-to-code parity & drift detector
 │   ├── ingest_context.py               # Ingests structured context into doc sections
 │   ├── scaffold_module.py              # Automated domain & module scaffolder
 │   ├── record_decision.py              # Doc-Sync atomic revision logger & ADR generator
+│   ├── resolve_question.py             # Interactive design fork resolver
+│   ├── generate_doc_index.py           # Living documentation index generator
+│   ├── generate_invariant_tests.py     # Automated invariant test scaffolder
+│   ├── install_hooks.py                # Pre-commit hook installer
 │   └── bootstrap_project.py            # New project initialization wizard
-├── src/                                # 💻 Application Source Code (Pristine, 0 code)
-├── tests/                              # 🧪 Automated Test Suites (Pristine, 0 code)
+├── src/                                # 💻 Application Source Code (Pristine template)
+├── tests/                              # 🧪 Automated Test Suites (Pristine template)
 ├── templates/                          # 📐 Standardized Blueprints (4-Section Invariant)
 │   ├── leaf-template.md                # Base documentation component template
 │   ├── domain-template.md              # Product domain template (requirements + flows)
 │   ├── module-template.md              # Subsystem module template (architecture + interfaces)
 │   ├── api-contract-template.md        # API route contract template
 │   └── decision-record-template.md     # Architecture Decision Record (ADR) template
+├── mcp_config.json                     # Model Context Protocol template configuration
 ├── AGENTS.md                           # Universal operating directives for AI agents
 ├── GEMINI.md                           # Antigravity & Gemini workspace instructions
 ├── agent_system_prompt.md              # Master agent blueprint (Roles, Invariants, Escalation)
@@ -318,67 +334,74 @@ Every directory in this repository has a strict, unambiguous purpose:
 
 ---
 
-## 🛠️ 6. CLI Tooling Manual
+## 🛠️ 6. Unified CLI Tooling Manual (`python scripts/harness.py`)
 
-All tooling is located in `scripts/`, requires **standard Python 3.8+**, and has **zero third-party dependencies**.
+All repository operations are managed through the unified CLI: `python scripts/harness.py` (requires standard Python 3.8+ with zero third-party dependencies).
 
-### 1. `scripts/audit_repo.py` &mdash; Master Health Auditor
-Runs an exhaustive 27-point check verifying core files, doc linter compliance, and doc-to-code parity.
+### 1. Repository Health & Quality Gating
 ```bash
-python scripts/audit_repo.py
-```
-*Exit Code 0: 100% compliant. Exit Code 1: Violations detected.*
+# Master 42-point repository health & agentic readiness audit
+python scripts/harness.py audit
 
-### 2. `scripts/lint_docs.py` &mdash; Documentation Structure & Link Linter
-Audits all markdown files under `docs/` for the 4 mandatory sections, `Scope:` / `Related:` headers, and broken relative links.
-```bash
-# Standard linting
-python scripts/lint_docs.py
+# Structural documentation linting (4 mandatory sections, metadata, links)
+python scripts/harness.py lint --strict
 
-# Strict mode (fails on warnings or broken relative links)
-python scripts/lint_docs.py --strict
+# Doc-to-code parity & architectural drift detector
+python scripts/harness.py parity
+
+# Install automated local Git pre-commit hooks
+python scripts/harness.py install-hooks
 ```
 
-### 3. `scripts/check_doc_drift.py` &mdash; Parity & Drift Detector
-Detects if any folder exists in `src/` without matching specifications in `docs/tech/modules/`, or if code lacks test folders.
+### 2. Context Ingestion & Documentation Indexing
 ```bash
-python scripts/check_doc_drift.py
-```
-
-### 4. `scripts/ingest_context.py` &mdash; Direct Context Ingestion
-Appends structured context directly under a target document section and logs a date-stamped revision.
-```bash
-python scripts/ingest_context.py \
+# Ingest notes into a specification leaf
+python scripts/harness.py ingest \
   --target docs/tech/api/contracts.md \
   --section "Specifications & Interfaces" \
   --content "### Webhook Protocol\n- HMAC SHA-256 signature passed in X-Signature header." \
   --summary "Added webhook signature specifications"
+
+# Re-generate or audit living documentation catalog (docs/INDEX.md)
+python scripts/harness.py index
+python scripts/harness.py index --check
 ```
 
-### 5. `scripts/scaffold_module.py` &mdash; Domain & Module Scaffolder
-Creates compliant documentation, source code, and test folders in one command.
+### 3. Decisions & Architecture Decision Records (ADRs)
 ```bash
-# Scaffold a product domain (docs/product/domains/billing/requirements.md & flows.md)
-python scripts/scaffold_module.py --domain billing
+# Resolve an architectural fork interactively and lock ADR + spec
+python scripts/harness.py resolve --interactive
+
+# Resolve via CLI arguments
+python scripts/harness.py resolve \
+  --title "Adopt Redis for Token Denylist" \
+  --target docs/tech/api/contracts.md \
+  --choice "Redis sliding-TTL denylist" \
+  --context "Preserves sub-10ms API latency without querying DB on every request"
+
+# Generate standalone ADR
+python scripts/harness.py adr "Adopt EdDSA for Token Signatures"
+
+# Append atomic revision log
+python scripts/harness.py append docs/tech/api/contracts.md "Added rate limit header contracts"
+```
+
+### 4. Scaffolding & Invariant Tests
+```bash
+# Scaffold a product domain (docs/product/domains/billing/)
+python scripts/harness.py scaffold --domain billing
 
 # Scaffold a technical module (docs/tech/modules/auth/, src/auth/, tests/auth/)
-python scripts/scaffold_module.py --module auth
+python scripts/harness.py scaffold --module auth
+
+# Generate automated invariant test stubs from documentation
+python scripts/harness.py test-gen
 ```
 
-### 6. `scripts/record_decision.py` &mdash; Revision Logger & ADR Generator
-Appends revision entries to target doc sections or generates new formal Architecture Decision Records.
+### 5. Project Bootstrapping
 ```bash
-# Append decision log to an existing doc
-python scripts/record_decision.py --append docs/tech/api/contracts.md "Decided: HTTP 429 for rate limit breaches"
-
-# Create a formal Architecture Decision Record (ADR)
-python scripts/record_decision.py --adr "Use Redis for Distributed Token Revocation" --context "JWT session management"
-```
-
-### 7. `scripts/bootstrap_project.py` &mdash; Project Initialization Wizard
-Configures project metadata, updates `docs/product/overview.md`, initializes Git, and runs the audit.
-```bash
-python scripts/bootstrap_project.py --name "payment-gateway" --description "Real-time payment routing service"
+# Clean out template examples and re-brand for a new project
+python scripts/harness.py bootstrap --name "PaymentGateway" --description "Real-time payment routing service"
 ```
 
 ---

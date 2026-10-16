@@ -38,12 +38,19 @@ def check_link_integrity(content: str, source_file: Path) -> list:
         if not clean_target:
             continue
         
-        target_path = Path(clean_target)
-        # Check relative to repo root or relative to source file
-        resolved_from_root = Path.cwd() / target_path
-        resolved_from_source = source_file.parent / target_path
-        
-        if not resolved_from_root.exists() and not resolved_from_source.exists():
+        # Handle file:// prefixes
+        if clean_target.startswith("file://"):
+            clean_target = clean_target.replace("file://", "").lstrip("/\\")
+
+        try:
+            target_path = Path(clean_target)
+            # Check relative to repo root or relative to source file
+            resolved_from_root = Path.cwd() / target_path
+            resolved_from_source = source_file.parent / target_path
+            
+            if not resolved_from_root.exists() and not resolved_from_source.exists():
+                broken_links.append(target)
+        except OSError:
             broken_links.append(target)
             
     return broken_links

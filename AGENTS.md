@@ -90,16 +90,20 @@ Along with top-level metadata:
 
 ## 5. Built-In Agentic Tooling
 
-Run these scripts directly in the terminal:
+All repository governance, auditing, and scaffolding operations are accessible via `python scripts/harness.py`:
 
-| Command | Purpose |
-| :--- | :--- |
-| `python scripts/audit_repo.py` | Complete repository health and agent readiness audit |
-| `python scripts/lint_docs.py --strict` | Validates documentation structure, headers, and relative link integrity |
-| `python scripts/check_doc_drift.py` | Audits doc-to-code parity and flags undocumented code modules |
-| `python scripts/ingest_context.py` | Ingests raw context and updates targeted documentation sections |
-| `python scripts/scaffold_module.py --domain <name>` | Scaffolds a new product domain under `docs/product/domains/` |
-| `python scripts/scaffold_module.py --module <name>` | Scaffolds a new technical module under `docs/tech/modules/`, `src/`, and `tests/` |
-| `python scripts/record_decision.py --append <file> "<log>"` | Appends an atomic revision log to a document |
-| `python scripts/record_decision.py --adr "<title>"` | Generates a new Architecture Decision Record in `docs/decisions/` |
-| `python scripts/bootstrap_project.py --name <name>` | Bootstraps a fresh project from this template |
+| Harness Command | Underlying Script | Purpose |
+| :--- | :--- | :--- |
+| `python scripts/harness.py audit` | `scripts/audit_repo.py` | Complete 42-point repository health and agent readiness audit |
+| `python scripts/harness.py lint --strict` | `scripts/lint_docs.py` | Validates documentation 4-section structure and link integrity |
+| `python scripts/harness.py parity` | `scripts/check_doc_drift.py` | Audits doc-to-code parity and flags undocumented code modules |
+| `python scripts/harness.py index` | `scripts/generate_doc_index.py` | Generates or verifies living documentation index (`docs/INDEX.md`) |
+| `python scripts/harness.py ingest` | `scripts/ingest_context.py` | Ingests raw context and updates targeted documentation sections |
+| `python scripts/harness.py scaffold` | `scripts/scaffold_module.py` | Scaffolds product domains (`--domain`) or technical modules (`--module`) |
+| `python scripts/harness.py resolve` | `scripts/resolve_question.py` | Resolves design forks, generates ADR, and updates target spec |
+| `python scripts/harness.py adr` | `scripts/record_decision.py` | Generates a new Architecture Decision Record in `docs/decisions/` |
+| `python scripts/harness.py append` | `scripts/record_decision.py` | Appends an atomic revision log to a document |
+| `python scripts/harness.py test-gen` | `scripts/generate_invariant_tests.py` | Scaffolds automated invariant test stubs from documentation |
+| `python scripts/harness.py install-hooks` | `scripts/install_hooks.py` | Installs local Git pre-commit enforcement hooks |
+| `python scripts/harness.py bootstrap` | `scripts/bootstrap_project.py` | Bootstraps a fresh downstream project from this template |
+

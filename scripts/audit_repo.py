@@ -49,7 +49,11 @@ CORE_FILES = [
     ".agents/skills/doc-harness/SKILL.md",
     ".agents/skills/design-interviewer/SKILL.md",
     "scripts/generate_invariant_tests.py",
-    ".devcontainer/devcontainer.json"
+    ".devcontainer/devcontainer.json",
+    "scripts/resolve_question.py",
+    "scripts/generate_doc_index.py",
+    "docs/INDEX.md",
+    "mcp_config.json"
 ]
 
 def run_step(title: str, command: list) -> bool:
@@ -93,6 +97,11 @@ def audit():
     # 3. Doc-to-Code Parity Check
     total_checks += 1
     if run_step("Doc-to-Code Parity & Drift Check", ["scripts/check_doc_drift.py"]):
+        passed_checks += 1
+
+    # 4. Living Documentation Index Check
+    total_checks += 1
+    if run_step("Living Documentation Index Completeness", ["scripts/generate_doc_index.py", "--check"]):
         passed_checks += 1
 
     # Summary
