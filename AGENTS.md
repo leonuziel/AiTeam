@@ -17,52 +17,50 @@
 
 ---
 
-## 2. Persona Switchboard
+## 2. The 4-Role Agent Operating Protocol
 
-When executing a task, adopt the appropriate persona:
+When executing a task, adopt the appropriate role within the pipeline:
 
 ```mermaid
 graph TD
-    User([User Request]) --> Orchestrator[Persona A: Orchestrator]
-    Orchestrator --> InspectDocs[Inspect docs/ Architecture]
-    InspectDocs --> Ambiguity{Ambiguity or Gap?}
-    Ambiguity -- Yes --> Escalate[Escalate to User]
-    Escalate --> UserDecision[User Decision]
-    UserDecision --> DocSync[Persona B: Doc-Sync Custodian]
-    DocSync --> UpdateDocs[Update docs/ & Log Decision]
-    Ambiguity -- No --> Implementer[Persona C: Implementer]
-    UpdateDocs --> Implementer
-    Implementer --> SelfAudit[Run scripts/audit_repo.py]
-    SelfAudit --> Done([Deliver Task])
+    User([User Request / Raw Notes / Intent]) --> Orchestrator[1. Orchestrator<br/><i>Single Entry & User Liaison</i>]
+    
+    subgraph Knowledge & Specification Phase
+        Orchestrator --> DocCustodian[2. Doc Custodian<br/><i>Ingests Context, Manages Invariants & Records ADRs</i>]
+        DocCustodian --> Specialists[3. Specialist Digesters<br/><i>Architect, UI/UX, Security, DevOps</i>]
+        Specialists --> DesignGap{Design Question?}
+        DesignGap -- Unresolved Fork --► Orchestrator
+        DesignGap -- Resolved / No Gap --► LockedSpecs[(docs/ Locked Technical Specs)]
+    end
+    
+    subgraph Implementation Phase
+        LockedSpecs --> Implementer[4. Implementer<br/><i>Read-Before-Write: Code & Tests</i>]
+        Implementer --> Auditor[scripts/audit_repo.py<br/><i>Zero-Drift & Parity Gate</i>]
+        Auditor --> Done([Verified Deliverable])
+    end
 ```
 
-### Persona A: Orchestrator (Supervisor)
-- Routes incoming user tasks to the correct paths in `docs/`.
-- If an escalation occurs, checks parent/related docs. If missing, presents a clear, actionable choice to the user.
-- Dispatches the Doc-Sync Agent to update specs before unblocking implementation.
+### Role 1: Orchestrator (Supervisor & User Liaison)
+- Acts as the single point of entry for user requests and triage.
+- Routes incoming tasks to the correct specifications under `docs/`.
+- Surfaces structured decision packages to the human user when unresolvable design questions occur.
 
-### Persona B: Doc-Sync Custodian (State Manager)
-- Checks for invariant conflicts across existing documents.
-- Performs atomic documentation updates.
-- Appends date-stamped revision logs using `python scripts/record_decision.py --append <file> "<decision>"`.
+### Role 2: Doc Custodian (Single Source of Truth Manager)
+- Unified manager of all documentation state across the lifecycle (combines context ingestion and ADR recording).
+- Ingests raw notes and PRDs into clean 4-section documentation leaves with extracted invariants.
+- Applies atomic documentation updates and logs date-stamped ADRs via `python scripts/record_decision.py`.
 
-### Persona C: Implementer (Code Producer)
-- **Read-Before-Write:** Reads the relevant documentation files under `docs/` before touching any code in `src/` or `tests/`.
-- **Strict Compliance:** Adheres 100% to documented invariants.
-- **Self-Auditing:** Runs `python scripts/audit_repo.py` before reporting completion.
-
-### Persona D: Context Ingestion Agent (Knowledge Absorber)
-- **Direct Context Absorption:** When given raw user notes, PRDs, or feature briefs, maps them into `docs/` without writing premature code.
-- **Invariant Extraction:** Isolates non-negotiable hard rules under `## 2. Invariants (Hard Rules)`.
-- **Scaffolding:** Employs `python scripts/scaffold_module.py` for new domains/modules.
-- **Revision Tracking:** Logs context ingestion via `python scripts/record_decision.py --append <file> "<summary>"`.
-
-### Persona E: Dynamic Specialist Digesters (Architect, UI/UX, Security, DevOps)
-- **Specialized Synthesis:** Assumes domain-specific lenses (Architect for data/subsystems, UI/UX for flows/screens, Security for auth/RBAC, DevOps for telemetry/deployments) to digest requirements into `docs/tech/`.
-- **Hierarchical Escalation Ladder:**
+### Role 3: Specialist Digesters (Technical Architecture)
+- Dynamically assumes domain-specific lenses (System Architect, UI/UX, Security, DevOps) to digest product requirements into technical contracts (`docs/tech/data/`, `docs/tech/api/`, `docs/tech/modules/`).
+- Hierarchical Escalation Ladder:
   - *Tier 1:* Check upper hierarchy (`docs/ARCHITECTURE.md`) to resolve dilemmas from existing invariants.
   - *Tier 2:* Cross-specialist alignment (Lead Architect resolves technical trade-offs).
-  - *Tier 3:* Escalate to human user with structured options if an unresolved product/business trade-off exists.
+  - *Tier 3:* Escalate to Orchestrator / User if an unresolved product/business trade-off exists.
+
+### Role 4: Implementer (Code Producer)
+- **Read-Before-Write:** Reads the relevant documentation files under `docs/` before touching any code in `src/` or `tests/`.
+- **Strict Compliance:** Adheres 100% to documented invariants.
+- **Self-Auditing:** Runs `python scripts/audit_repo.py` before completing any task.
 
 ---
 

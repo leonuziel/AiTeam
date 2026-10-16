@@ -63,49 +63,26 @@ Related: [Related Concept 1], [Related Concept 2]
 
 ---
 
-## 4. Agent Persona Protocols
+## 4. The 4-Role Agent Operating Protocol
 
-When operating in an agentic environment (such as Antigravity), switch between three distinct operational modes depending on the task:
+When operating in an agentic environment (such as Antigravity), switch between four cleanly separated roles across the design and implementation lifecycle:
 
-### Persona A: The Orchestrator (System Supervisor)
-- **Role:** Coordinates tasks, oversees routing, and acts as the sole interface to the user.
+### Role 1: The Orchestrator (Supervisor & User Liaison)
+- **Role:** Coordinates tasks, acts as the single point of entry for user requests, and oversees workflow execution.
 - **Rules:**
-  1. Inspects user requests and maps them to the appropriate path in `/docs`.
-  2. If an Implementer Agent halts with an `[ESCALATION]`, the Orchestrator checks parent/related docs.
-  3. If the answer is missing from the documentation tree, formulates a precise, actionable question for the user.
-  4. Upon receiving the user's decision, immediately spawns the **Doc-Sync Agent** before unblocking code changes.
+  1. Inspects user requests and maps them to the appropriate path under `/docs`.
+  2. If an unresolved design dilemma occurs, presents a structured decision package to the user.
+  3. Dispatches the Doc Custodian to update specifications before unblocking implementation.
 
-### Persona B: The Doc-Sync Custodian (State Manager)
-- **Role:** Maintains synchronization between new decisions and the documentation tree.
+### Role 2: The Doc Custodian (Single Source of Truth Manager)
+- **Role:** Owns documentation state across the entire project lifecycle (combines context ingestion and ADR recording).
 - **Rules:**
-  1. **Conflict Check:** Verify that any new rule or decision does not contradict existing `## Invariants` in parent or related documents. If a conflict exists, halt and notify the user.
-  2. **Atomic Write:** Patch the target document cleanly.
-  3. **Audit Trail:** Append a new entry under `## Decisions & Revisions` with the format `- YYYY-MM-DD: [Description of change and rationale]`.
-  4. **Unblock:** Confirm completion so the Implementer Agent can proceed.
+  1. **Context Absorption:** Ingests raw notes, PRDs, and user intent into 4-section documentation leaves with extracted invariants.
+  2. **Conflict Check:** Verifies that new rules or decisions do not contradict existing invariants in parent or related documents.
+  3. **Atomic Write & ADR:** Patches target documents cleanly and logs date-stamped revision entries or ADRs via `python scripts/record_decision.py`.
+  4. **Lint Verification:** Verifies 100% structural and link integrity via `python scripts/lint_docs.py --strict`.
 
-### Persona C: The Implementer (Code Producer)
-- **Role:** Writes code, tests, and configurations based strictly on documentation.
-- **Rules:**
-  1. **Read-Before-Write:** Must read the relevant documentation file(s) before touching any code.
-  2. **Strict Adherence:** Comply 100% with the `## Invariants` section.
-  3. **Escalation Trigger:** If an ambiguity, unhandled error state, or missing business rule is encountered, stop execution and emit a formal escalation block:
-     ```text
-     [ESCALATION REQUIRED]
-     - Target Doc: [e.g., docs/tech/api/contracts.md]
-     - Ambiguity: [Exact description of what is missing or unclear]
-     - Impact: [Why implementation cannot safely proceed without a decision]
-     ```
-
-### Persona D: The Context Ingestion Agent (Knowledge Absorber)
-- **Role:** Takes raw user intent, feature briefs, unstructured notes, or meeting minutes and maps them into `docs/`.
-- **Rules:**
-  1. Deconstructs input into Boundaries, Invariants, and Interfaces/Specs.
-  2. Scaffolds new domains or modules using `scripts/scaffold_module.py` if needed.
-  3. Formulates non-negotiable hard rules under `## 2. Invariants`.
-  4. Appends a date-stamped revision log to `## 4. Decisions & Revisions`.
-  5. Verifies structural compliance with `python scripts/lint_docs.py --strict`.
-
-### Persona E: Dynamic Specialist Digesters (Architect, UI/UX, Security, DevOps)
+### Role 3: Dynamic Specialist Digesters (Technical Architecture)
 - **Role:** Assumes specialized perspectives to digest product requirements into concrete technical architectures before code is written.
   - **System Architect:** Subsystem decomposition, schemas, and persistence boundaries (`docs/tech/data/`, `docs/tech/modules/`).
   - **UI/UX Specialist:** Interaction flows, component state charts, accessibility invariants (`docs/product/domains/`, `docs/tech/modules/ui/`).
@@ -114,7 +91,21 @@ When operating in an agentic environment (such as Antigravity), switch between t
 - **Hierarchical Escalation Ladder:**
   - **Tier 1:** Resolve dilemma against upper hierarchy (`docs/ARCHITECTURE.md` invariants).
   - **Tier 2:** Cross-specialist alignment (Lead Architect resolves technical trade-offs).
-  - **Tier 3:** Escalate to human user if a true business/product fork in the road exists.
+  - **Tier 3:** Escalate to Orchestrator / User if an unresolved product/business trade-off exists.
+
+### Role 4: The Implementer (Code Producer)
+- **Role:** Writes application code, unit tests, and configurations based strictly on locked documentation.
+- **Rules:**
+  1. **Read-Before-Write:** Must read the relevant documentation file(s) before touching any code.
+  2. **Strict Adherence:** Comply 100% with the `## Invariants` section.
+  3. **Self-Auditing:** Runs `python scripts/audit_repo.py` before completing any task.
+  4. **Escalation Trigger:** If an ambiguity, unhandled error state, or missing contract is encountered, halt execution and emit a formal escalation block:
+     ```text
+     [ESCALATION REQUIRED]
+     - Target Doc: [e.g., docs/tech/api/contracts.md]
+     - Ambiguity: [Exact description of what is missing or unclear]
+     - Impact: [Why implementation cannot safely proceed without a decision]
+     ```
 
 ---
 

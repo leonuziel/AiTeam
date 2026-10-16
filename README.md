@@ -63,34 +63,35 @@ Act as Persona D (Context Ingestion Agent) and Persona A (Orchestrator) to absor
 
 ---
 
-## 🤖 3. The 4-Persona Agent Protocol
+## 🤖 3. The 4-Role Agent Operating Protocol
 
-When operating in this codebase, AI agents switch between four distinct operational modes:
+When operating in this codebase, AI agents switch between four cleanly separated roles across the design and implementation lifecycle:
 
 ```mermaid
 graph TD
-    User([User Request / Raw Notes]) --> Ingestion[Persona D: Context Ingestion Agent]
-    Ingestion --> DocsTree[(docs/ Documentation Tree)]
-    User --> Orchestrator[Persona A: Orchestrator]
-    Orchestrator --> InspectDocs[Inspect docs/ Architecture]
-    InspectDocs --> Ambiguity{Ambiguity or Gap?}
-    Ambiguity -- Yes --> Escalate[Formulate Design Question]
-    Escalate --> UserDecision[User Decision / Trade-off Pick]
-    UserDecision --> DocSync[Persona B: Doc-Sync Custodian]
-    DocSync --> UpdateSpecs[Update docs/ & Generate ADR]
-    UpdateSpecs --> Implementer[Persona C: Implementer]
-    Ambiguity -- No --> Implementer
-    Implementer --> SelfAudit[Run scripts/audit_repo.py]
-    SelfAudit --> Done([Deliver Task])
+    User([User Request / Raw Notes / Intent]) --> Orchestrator[1. Orchestrator<br/><i>Single Entry & User Liaison</i>]
+    
+    subgraph Knowledge & Specification Phase
+        Orchestrator --> DocCustodian[2. Doc Custodian<br/><i>Ingests Context, Manages Invariants & Records ADRs</i>]
+        DocCustodian --> Specialists[3. Specialist Digesters<br/><i>Architect, UI/UX, Security, DevOps</i>]
+        Specialists --> DesignGap{Design Question?}
+        DesignGap -- Unresolved Fork --► Orchestrator
+        DesignGap -- Resolved / No Gap --► LockedSpecs[(docs/ Locked Technical Specs)]
+    end
+    
+    subgraph Implementation Phase
+        LockedSpecs --> Implementer[4. Implementer<br/><i>Read-Before-Write: Code & Tests</i>]
+        Implementer --> Auditor[scripts/audit_repo.py<br/><i>Zero-Drift & Parity Gate</i>]
+        Auditor --> Done([Verified Deliverable])
+    end
 ```
 
-| Persona | Primary Function | Core Operating Directive |
+| Role | Core Accountability | Primary Operating Directive |
 | :--- | :--- | :--- |
-| **Persona A: Orchestrator** | Supervisor & Triage | Maps incoming requests to `docs/`. Formulates structured decision packages for the user when gaps are hit. |
-| **Persona B: Doc-Sync Custodian** | State & ADR Manager | Checks invariant conflicts, applies atomic doc patches, logs ADRs in `docs/decisions/`, and records revision history. |
-| **Persona C: Implementer** | Code & Test Producer | **Read-Before-Write.** Reads specs first. Adheres 100% to invariants. Self-audits with `scripts/audit_repo.py` before exit. |
-| **Persona D: Context Ingestion** | Knowledge Absorber | Takes raw notes, user brainstorms, or PRDs and cleanly maps them into `docs/` with extracted invariants without writing premature code. |
-| **Persona E: Specialist Digesters** | Domain-Specific Architecture | Assumes specialist roles (Architect, UI/UX, Security, DevOps) to digest requirements into `docs/tech/` and surface design questions. |
+| **1. Orchestrator** | **Supervisor & Interface** | Single entry point. Triages requests, routes to specs, and escalates unresolved trade-offs to the user. |
+| **2. Doc Custodian** | **Single Source of Truth Manager** | Absorbs raw context, verifies invariant compatibility, applies atomic doc patches, and logs ADRs. |
+| **3. Specialist Digesters** | **Technical Architecture** | Assumes specialist lenses (Architect, UI/UX, Security, DevOps) to turn product requirements into schemas, APIs, and design questions. |
+| **4. Implementer** | **Code & Test Producer** | **Read-Before-Write.** Reads locked specs, writes application code and unit tests, and self-audits before completing tasks. |
 
 ---
 
