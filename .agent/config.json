@@ -1,0 +1,21 @@
+{
+  "workspace": {
+    "name": "Doc-to-Code Autonomous System",
+    "allowed_write_paths": [
+      "docs/",
+      "src/",
+      "tests/",
+      "scripts/",
+      "templates/"
+    ],
+    "protected_paths": [
+      ".git/",
+      "agent_system_prompt.md",
+      "agent_extensions.md"
+    ]
+  },
+  "behavior": {
+    "require_spec_before_code": true,
+    "escalate_on_ambiguity": true
+  }
+}
