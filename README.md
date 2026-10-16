@@ -95,12 +95,22 @@ graph TD
 
 ---
 
-## 🔄 4. The Core Agentic Lifecycles (Walkthroughs)
+## 🔄 4. The Core Agentic Lifecycles (Walkthroughs & Diagrams)
 
 ### Lifecycle A: Ingesting Context into Docs ("Just Add Context")
 *Workflow Reference:* [.agent/workflows/context_ingestion_loop.md](file:///d:/Workspace/AiTeam/.agent/workflows/context_ingestion_loop.md)
 
 When you have unstructured thoughts, user stories, or architecture notes, you don't need to manually write markdown specifications. Simply feed the raw context to the agent:
+
+```mermaid
+graph LR
+    RawInput[Raw Context / Notes / PRD] --> Deconstruct[Deconstruct:<br/>Boundaries & Invariants]
+    Deconstruct --> Route[Route to Domain / Module Leaf]
+    Route --> Inject["Inject via scripts/ingest_context.py"]
+    Inject --> RecordRev["Record Log in ## 4"]
+    RecordRev --> LintVerify["Verify: scripts/lint_docs.py"]
+    LintVerify --> LockedLeaf[(Document Leaf Synced)]
+```
 
 ```text
 User: "Here are my notes for user billing: We need to support Stripe and PayPal. All subscription payments 
@@ -119,6 +129,21 @@ must be retried 3 times with exponential backoff before canceling. Webhooks must
 ### Lifecycle B: Dynamic Specialist Digestion & Hierarchical Questions
 *Workflow Reference:* [.agent/workflows/requirement_digestion_loop.md](file:///d:/Workspace/AiTeam/.agent/workflows/requirement_digestion_loop.md)
 
+```mermaid
+graph TD
+    ProductReqs[docs/product/ Requirements] --> Specialists["Dynamic Specialists:<br/>Architect | UI/UX | Security | DevOps"]
+    Specialists --> Dilemma{Architectural Dilemma?}
+    Dilemma -->|Tier 1: Parent Invariants| Tier1["Resolve from docs/ARCHITECTURE.md"]
+    Dilemma -->|Tier 2: Cross-Specialist| Tier2["Lead Architect Resolves Constraints"]
+    Dilemma -->|Tier 3: Product Trade-off| Tier3["Escalate [DESIGN QUESTION] to User"]
+    Tier1 --> Specs["Synthesize tech/ Specs"]
+    Tier2 --> Specs
+    Tier3 --> UserChoice[User Direction]
+    UserChoice --> ADR["Log docs/decisions/ ADR"]
+    ADR --> Specs
+    Specs --> LockedTech[(Locked Technical Contracts)]
+```
+
 Product requirements can be digested by the agent using **whatever specialist lens fits best**:
 - 🏛️ **System Architect:** Translates user stories into relational/document data models (`docs/tech/data/`) and subsystem decomposition (`docs/tech/modules/`).
 - 🎨 **UI/UX Specialist:** Derives user interaction sequences, component state machines, optimistic UI updates, and responsive breakpoints.
@@ -135,6 +160,16 @@ When a specialist encounters an unhandled dilemma:
 
 ### Lifecycle C: Answering Downstream Design Questions ("Design Resolution")
 *Workflow Reference:* [.agent/workflows/design_resolution_loop.md](file:///d:/Workspace/AiTeam/.agent/workflows/design_resolution_loop.md)
+
+```mermaid
+graph TD
+    Implementer[Implementer Agent] --> HitFork{Hits Fork / Unclear Spec}
+    HitFork --> Package["Formulate Decision Package:<br/>Context + Options A/B + Recommendation"]
+    Package --> Orchestrator[Orchestrator Presents to User]
+    Orchestrator --> Decision[User Selects Option]
+    Decision --> DocSync["Doc Custodian Logs ADR & Updates Spec"]
+    DocSync --> Resume[Implementer Resumes Coding with Locked Spec]
+```
 
 When an implementer agent is writing code and hits an architectural fork in the road (e.g., PostgreSQL vs. MongoDB, error code format, or rate limiting headers), **it is forbidden from guessing silently in code**.
 
@@ -160,7 +195,7 @@ Option A &mdash; Preserves sub-10ms API latency requirements defined in docs/tec
 
 **Resolution Flow:**
 1. The user responds: *"Option A"*.
-2. The Doc-Sync Custodian runs:
+2. The Doc Custodian runs:
    ```bash
    python scripts/record_decision.py --adr "Use Redis for Distributed Token Revocation" --context "Stateless JWT logout requires real-time denylist"
    ```
@@ -171,6 +206,18 @@ Option A &mdash; Preserves sub-10ms API latency requirements defined in docs/tec
 
 ### Lifecycle D: Implementation & Continuous Parity
 *Workflow Reference:* [.agent/workflows/code_review_loop.md](file:///d:/Workspace/AiTeam/.agent/workflows/code_review_loop.md)
+
+```mermaid
+graph LR
+    LockedSpecs[(Locked Specs)] --> Read[Read-Before-Write]
+    Read --> Code["Write src/ Code"]
+    Code --> Tests["Write tests/ Unit Tests"]
+    Tests --> ParityGate{"scripts/check_doc_drift.py"}
+    ParityGate -->|Drift Detected| Fix[Align Code & Specs]
+    Fix --> Tests
+    ParityGate -->|Zero Drift| MasterAudit["scripts/audit_repo.py"]
+    MasterAudit --> Deliverable([Verified Deliverable])
+```
 
 1. **Read-Before-Write:** The implementer reads `docs/tech/modules/<module>/architecture.md` and related contracts.
 2. **Implementation:** Writes clean code in `src/<module>/` and tests in `tests/<module>/`.
@@ -184,6 +231,17 @@ Option A &mdash; Preserves sub-10ms API latency requirements defined in docs/tec
 
 ### Lifecycle E: Full Autonomous Cascade (Overnight / Hands-Off Execution)
 *Workflow Reference:* [.agent/workflows/autonomous_pipeline_loop.md](file:///d:/Workspace/AiTeam/.agent/workflows/autonomous_pipeline_loop.md)
+
+```mermaid
+graph LR
+    RawIntent[User Intent / PRD] --> Ingest[1. Ingest Context]
+    Ingest --> Digest[2. Digest Specs]
+    Digest --> AutoADR[3. Auto-Resolve ADRs]
+    AutoADR --> CodeTests[4. Code & Tests]
+    CodeTests --> Gate{"5. Audit 100%?"}
+    Gate -->|Fix Issues| CodeTests
+    Gate -->|Passed| Done([Done: Zero Drift Deliverable])
+```
 
 When you want an agent to autonomously execute from raw product intent directly to working, tested code without manual milestone intervention:
 - Chain: `Context Ingestion` $\rightarrow$ `Specialist Digestion` $\rightarrow$ `Auto-Resolve Design Questions (via Agent Recommendations)` $\rightarrow$ `Implementation` $\rightarrow$ `Health Audit`.
