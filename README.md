@@ -44,21 +44,21 @@ Click **"Use this template"** > **"Create a new repository"** to spin up your pr
 Open your terminal in your local project workspace:
 ```bash
 # 1. Initialize your project metadata and git repository
-python scripts/bootstrap_project.py --name "my-awesome-service" --description "High throughput event processing platform"
+python scripts/harness.py bootstrap --name "my-awesome-service" --description "High throughput event processing platform"
 
-# 2. Verify pristine template health
-python scripts/audit_repo.py
+# 2. Verify pristine template health (42-point audit)
+python scripts/harness.py audit
 ```
 
 ### Step 3: Launch in Your Agentic IDE
-Open the workspace in **Google Antigravity**, Cursor, Claude Code, or VS Code.
+Open the workspace in **Google Antigravity**, Cursor, Claude Code, or VS Code (or 1-click in GitHub Codespaces via `.devcontainer/`).
 
 ### Step 4: The Agent Kickoff Prompt (Copy & Paste)
 Give this prompt to your AI coding agent to begin your project:
 ```markdown
 Read `AGENTS.md`, `agent_system_prompt.md`, and `docs/ARCHITECTURE.md`. 
 We are building [Describe your project, e.g., 'a distributed notification gateway with SMS and email providers'].
-Act as Persona D (Context Ingestion Agent) and Persona A (Orchestrator) to absorb this vision, establish our product overview in docs/product/overview.md, and scaffold our first domain.
+Act as Role 1 (Orchestrator) and Role 2 (Doc Custodian) to absorb this vision, establish our product overview in docs/product/overview.md, and scaffold our first domain.
 ```
 
 ---
@@ -440,33 +440,33 @@ Use these battle-tested prompts when directing AI agents in your IDE:
 ### 📌 Prompt 1: Context Ingestion (Raw Brain-Dump to Docs)
 ```markdown
 Read AGENTS.md and .agent/workflows/context_ingestion_loop.md.
-Please act as Persona D (Context Ingestion Agent).
+Please act as Role 2: Doc Custodian.
 Here is raw context/notes for [Feature Name]:
 ---
 [PASTE YOUR RAW NOTES / PRD / REQUIREMENTS HERE]
 ---
-Triage this context into docs/, extract all non-negotiable invariants, scaffold or update the corresponding leaves, log the revision in ## 4, and run `python scripts/lint_docs.py --strict`. Do not write code yet.
+Triage this context into docs/, extract all non-negotiable invariants, scaffold or update the corresponding leaves, log the revision in ## 4, and run `python scripts/harness.py lint --strict`. Do not write code yet.
 ```
 
 ### 📌 Prompt 2: Feature Implementation (Doc-to-Code)
 ```markdown
 Read AGENTS.md and docs/product/domains/[domain]/requirements.md.
-Please act as Persona C (Implementer).
+Please act as Role 4: Implementer.
 Inspect the documented invariants and specifications, then implement the service in src/[module]/ and complete unit tests in tests/[module]/.
-Comply 100% with documented invariants. If you encounter any unspecified edge case, halt and escalate. Run `python scripts/audit_repo.py` before completing the turn.
+Comply 100% with documented invariants. If you encounter any unspecified edge case, halt and escalate. Run `python scripts/harness.py audit` before completing the turn.
 ```
 
 ### 📌 Prompt 3: Resolving a Downstream Design Question
 ```markdown
 Read AGENTS.md and .agent/workflows/design_resolution_loop.md.
 We need to resolve an architectural decision regarding [topic, e.g., database choice / cache strategy].
-Formulate a structured decision package with Option A vs. Option B, trade-offs, and your recommendation. Once aligned, use `python scripts/record_decision.py --adr` to generate the ADR and update related specs.
+Formulate a structured decision package with Option A vs. Option B, trade-offs, and your recommendation. Once aligned, use `python scripts/harness.py resolve` to lock the decision, generate the ADR, and update related specs.
 ```
 
 ### 📌 Prompt 4: Repository Health & Hygiene Audit
 ```markdown
 Read AGENTS.md and .agent/workflows/continuous_cleanliness_loop.md.
-Perform a full repository cleanliness and parity audit. Run `python scripts/audit_repo.py` and report any documentation drift, missing sections, or uncommitted files.
+Perform a full repository cleanliness and parity audit. Run `python scripts/harness.py audit` and report any documentation drift, missing sections, or uncommitted files.
 ```
 
 ---
