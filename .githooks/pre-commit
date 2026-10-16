@@ -1,0 +1,24 @@
+#!/bin/sh
+# Doc-to-Code Pre-Commit Verification Gate
+# Blocks any commit that introduces structural doc errors or undocumented drift.
+
+echo "🛡️  [Doc-to-Code] Running pre-commit compliance checks..."
+
+python scripts/lint_docs.py --strict
+LINT_EXIT=$?
+
+if [ $LINT_EXIT -ne 0 ]; then
+  echo "❌ Pre-commit check failed: Documentation linting error detected."
+  exit 1
+fi
+
+python scripts/check_doc_drift.py
+DRIFT_EXIT=$?
+
+if [ $DRIFT_EXIT -ne 0 ]; then
+  echo "❌ Pre-commit check failed: Undocumented modules or architectural drift detected."
+  exit 1
+fi
+
+echo "✨ [Doc-to-Code] All pre-commit compliance checks passed!"
+exit 0
