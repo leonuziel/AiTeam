@@ -27,10 +27,10 @@ Specialists must never guess answers to cross-cutting dilemmas. Instead, questio
 ```mermaid
 graph TD
     Specialist([Specialist Digester Identifies Dilemma]) --> Tier1{Tier 1: Parent Invariants Check}
-    Tier1 -- Resolved by docs/ARCHITECTURE.md --► AutoResolve1[Resolve & Record under ## 4]
-    Tier1 -- Unresolved --► Tier2{Tier 2: Cross-Specialist / Lead Architect Alignment}
-    Tier2 -- Resolvable from System Constraints --► AutoResolve2[Generate ADR & Update Specs]
-    Tier2 -- Unresolved Business / Product Fork --► Tier3[Tier 3: Escalate to Human User]
+    Tier1 -->|Resolved by docs/ARCHITECTURE.md| AutoResolve1[Resolve & Record under ## 4]
+    Tier1 -->|Unresolved| Tier2{Tier 2: Cross-Specialist / Lead Architect Alignment}
+    Tier2 -->|Resolvable from System Constraints| AutoResolve2[Generate ADR & Update Specs]
+    Tier2 -->|Unresolved Business / Product Fork| Tier3[Tier 3: Escalate to Human User]
     Tier3 --> DecisionPackage[Emit Structured [DESIGN QUESTION] Package]
     DecisionPackage --> UserPick([User Selects Direction or Provides Input])
     UserPick --> LogADR[Record ADR via python scripts/record_decision.py]

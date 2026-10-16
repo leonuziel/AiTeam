@@ -75,8 +75,8 @@ graph TD
         Orchestrator --> DocCustodian[2. Doc Custodian<br/><i>Ingests Context, Manages Invariants & Records ADRs</i>]
         DocCustodian --> Specialists[3. Specialist Digesters<br/><i>Architect, UI/UX, Security, DevOps</i>]
         Specialists --> DesignGap{Design Question?}
-        DesignGap -- Unresolved Fork --► Orchestrator
-        DesignGap -- Resolved / No Gap --► LockedSpecs[(docs/ Locked Technical Specs)]
+        DesignGap -->|Unresolved Fork| Orchestrator
+        DesignGap -->|Resolved / No Gap| LockedSpecs[(docs/ Locked Technical Specs)]
     end
     
     subgraph Implementation Phase
