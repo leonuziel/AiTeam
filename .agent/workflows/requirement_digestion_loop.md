@@ -2,86 +2,98 @@
 
 ## Purpose
 Bridges the critical gap between **Product Requirements** (`docs/product/`) and **Technical Architecture** (`docs/tech/`). 
-It analyzes business requirements, translates them into technical contracts (schemas, APIs, interfaces), and **proactively surfaces design questions BEFORE any code is written**.
+It empowers the agent to embody **dynamic specialist lenses** (e.g., System Architect, UI/UX Specialist, Security Specialist, DevOps Engineer) to digest requirements into concrete technical contracts, and **proactively surfaces design questions up the hierarchy or to the user BEFORE writing any code**.
 
 ---
 
-## The 3-Tier Digestion Architecture
+## 1. Dynamic Specialist Digestion Lenses
 
-```text
-┌─────────────────────────────────┐
-│ 1. Product Requirements         │ (User stories, acceptance criteria, interaction flows)
-│    docs/product/domains/        │
-└────────────────┬────────────────┘
-                 │
-                 ▼  [Requirement Digestion Loop]
-┌─────────────────────────────────┐
-│ 2. Technical Architecture       │ (Data models, API contracts, interface signatures)
-│    docs/tech/data/ & api/ & mod/│
-└────────────────┬────────────────┘
-                 │
-                 ▼  [Design Questions Surfaced Proactively]
-┌─────────────────────────────────┐
-│ 3. ADRs & Decision Closure      │ (Resolved trade-offs, locked contracts)
-│    docs/decisions/              │
-└────────────────┬────────────────┘
-                 │
-                 ▼  [Implementer Handoff]
-┌─────────────────────────────────┐
-│ 4. Code & Unit Test Execution   │ (Pristine, 100% adherence to specifications)
-│    src/ & tests/                │
-└─────────────────────────────────┘
+Depending on the nature of the requirements, the agent dynamically assumes the necessary specialist perspectives to digest requirements into the appropriate documentation leaves:
+
+| Specialist Lens | Focus Area & Digestion Output | Target Documentation Leaves |
+| :--- | :--- | :--- |
+| 🏛️ **System Architect** | Data persistence models, transactional boundaries, subsystem module decomposition, and dependency graphs. | `docs/tech/data/`, `docs/tech/modules/<module>/` |
+| 🎨 **UI/UX Specialist** | Component state charts, interaction flows, accessibility invariants, optimistic UI updates, and responsive breakpoints. | `docs/product/domains/<domain>/flows.md`, `docs/tech/modules/ui/` |
+| 🔒 **Security Specialist** | AuthN/AuthZ mechanisms, RBAC roles, encryption at rest/in transit, secret management, and threat modeling. | `docs/tech/api/contracts.md`, `docs/operations/deployment.md` |
+| ⚡ **API & Protocols Specialist** | REST/gRPC/WebSocket payloads, error envelopes, versioning strategies, rate limits, and pagination contracts. | `docs/tech/api/contracts.md`, `docs/tech/api/error-handling.md` |
+| 🚀 **DevOps & SRE Specialist** | Target environments, CI/CD pipeline stages, container constraints, structured logging formats, and health probe contracts. | `docs/operations/deployment.md`, `docs/operations/telemetry.md` |
+
+---
+
+## 2. The Hierarchical Question Escalation Ladder
+
+Specialists must never guess answers to cross-cutting dilemmas. Instead, questions follow a **3-Tier Hierarchical Escalation Ladder**:
+
+```mermaid
+graph TD
+    Specialist([Specialist Digester Identifies Dilemma]) --> Tier1{Tier 1: Parent Invariants Check}
+    Tier1 -- Resolved by docs/ARCHITECTURE.md --► AutoResolve1[Resolve & Record under ## 4]
+    Tier1 -- Unresolved --► Tier2{Tier 2: Cross-Specialist / Lead Architect Alignment}
+    Tier2 -- Resolvable from System Constraints --► AutoResolve2[Generate ADR & Update Specs]
+    Tier2 -- Unresolved Business / Product Fork --► Tier3[Tier 3: Escalate to Human User]
+    Tier3 --> DecisionPackage[Emit Structured [DESIGN QUESTION] Package]
+    DecisionPackage --> UserPick([User Selects Direction or Provides Input])
+    UserPick --> LogADR[Record ADR via python scripts/record_decision.py]
+    LogADR --> Resume([Proceed with Technical Blueprint])
+```
+
+### Tier 1: Upper Documentation Hierarchy Check
+The specialist checks `docs/ARCHITECTURE.md` and parent domain overviews. If a global constraint (e.g., *"All public services must remain stateless"*) already decides the question, the specialist applies the rule without stalling.
+
+### Tier 2: Cross-Specialist Alignment (Lead Architect Resolution)
+If a UI specialist asks: *"Should we use WebSocket streaming or HTTP polling for live status?"*, the agent's System Architect lens checks backend scalability invariants. If WebSocket is required to meet the 500ms latency invariant, the question is answered internally, logged in the decision revision log, and design proceeds.
+
+### Tier 3: Human User Escalation
+If the question represents a **fundamental product direction, external vendor choice, or user experience trade-off** that cannot be derived from existing documentation, the specialist halts and formulates a **Decision Package**:
+
+```markdown
+### ❓ [DESIGN QUESTION from UI Specialist]: Real-Time Feed Delivery
+
+- **Originating Context:** docs/product/domains/notifications/flows.md
+- **Core Dilemma:** How should incoming notifications be presented to the user?
+- **Target Specification:** docs/tech/modules/notifications/architecture.md
+
+#### Evaluated Alternatives:
+1. **Option A: Optimistic Push via WebSockets (Recommended by UI Specialist)**
+   - *Pros:* Immediate user feedback, zero manual refreshes.
+   - *Cons:* Requires maintaining persistent WebSocket connections on backend.
+2. **Option B: Periodic Polling (30s interval)**
+   - *Pros:* Simpler server infrastructure; stateless HTTP.
+   - *Cons:* Notification latency up to 30 seconds; extra battery/network usage on mobile.
+
+#### 💡 Specialist Recommendation:
+Option A &mdash; Delivers modern real-time experience matching core product vision.
 ```
 
 ---
 
-## Step-by-Step Digestion Sequence
+## 3. Step-by-Step Digestion Sequence
 
 ```mermaid
 sequenceDiagram
-    participant Requirements as docs/product/
-    participant Digester as Digestion Agent
-    participant TechDocs as docs/tech/
-    participant User as User / ADR Log
+    participant Raw as docs/product/
+    participant Specialists as Dynamic Specialist Digesters (UI, Architect, Sec)
+    participant Upper as Upper Hierarchy / docs/ARCHITECTURE.md
+    participant User as Human User
+    participant TechDocs as docs/tech/ & docs/decisions/
     participant Implementer as Implementer Agent
 
-    Requirements->>Digester: Read product domain specs (requirements.md, flows.md)
-    Digester->>Digester: 1. Extract data entities, state transitions, & network boundaries
-    Digester->>TechDocs: 2. Synthesize draft schemas (tech/data/) & API contracts (tech/api/)
-    Digester->>Digester: 3. Proactively detect architectural forks & ambiguities
-    alt Architectural Forks / Gaps Found
-        Digester->>User: Surface [DESIGN QUESTION] package with Options A vs. B
-        User-->>Digester: Confirm decision (or agent auto-selects recommended option)
-        Digester->>TechDocs: Record ADR (docs/decisions/) and update tech specs
+    Raw->>Specialists: Ingest requirements & user journeys
+    Specialists->>Specialists: Embark on multi-lens analysis (UI, Data, API, Sec)
+    Specialists->>Upper: Check parent invariants for architectural alignment
+    alt Gap requires Human Guidance
+        Specialists->>User: Bubble up structured [DESIGN QUESTION]
+        User-->>Specialists: Selects Option / Provides clarification
+        Specialists->>TechDocs: Log ADR (scripts/record_decision.py --adr)
     end
-    Digester->>TechDocs: 4. Scaffold subsystem modules (scripts/scaffold_module.py --module)
-    Digester->>Implementer: 5. Hand off fully resolved technical blueprint for coding
+    Specialists->>TechDocs: Synthesize complete technical specs & interfaces
+    Specialists->>TechDocs: Run python scripts/lint_docs.py --strict
+    Specialists->>Implementer: Hand off locked technical blueprint for zero-stall coding
 ```
 
-### 1. Requirements Ingestion & Decomposition
-Read the product requirements and break them down into:
-- **Entities & Relationships:** What nouns exist? What are their lifecycles? (Maps to `docs/tech/data/schemas.md`).
-- **External Interfaces:** How do clients or services interact? (Maps to `docs/tech/api/contracts.md`).
-- **Operational Boundaries:** What are the throughput, latency, or security constraints? (Maps to `docs/operations/`).
-
-### 2. Technical Synthesis (Pre-Code Specifications)
-Create or update technical specifications:
-- Define database models, fields, and constraints.
-- Define HTTP/gRPC routes, request bodies, and error response envelopes.
-- Define exported TypeScript/Python interfaces and method signatures.
-
-### 3. Proactive Design Question Discovery
-Before handing off to the Implementer, the agent scans for technical forks:
-- *Storage dilemma:* Relational vs. Document vs. Key-Value?
-- *State dilemma:* In-memory vs. Distributed Cache?
-- *Error dilemma:* How are validation failures structured?
-- *Concurrency dilemma:* Optimistic locking vs. Pessimistic locking?
-
-Each dilemma is packaged using the **[DESIGN QUESTION]** format defined in [design_resolution_loop.md](file:///d:/Workspace/AiTeam/.agent/workflows/design_resolution_loop.md).
-
 ### 4. Technical Blueprint Locking
-Once design questions are resolved and recorded in `docs/decisions/`, run:
+Once all specialist perspectives have completed digestion and all questions are closed in `docs/decisions/`, the specification is locked:
 ```bash
 python scripts/lint_docs.py --strict
 ```
-The blueprint is now locked. The Implementer can write code with **zero ambiguity and zero stalls**.
+The Implementer agent now possesses complete, unambiguous contracts across UI, backend, data, and security before writing a single line of application code.

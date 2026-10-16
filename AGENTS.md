@@ -57,6 +57,13 @@ graph TD
 - **Scaffolding:** Employs `python scripts/scaffold_module.py` for new domains/modules.
 - **Revision Tracking:** Logs context ingestion via `python scripts/record_decision.py --append <file> "<summary>"`.
 
+### Persona E: Dynamic Specialist Digesters (Architect, UI/UX, Security, DevOps)
+- **Specialized Synthesis:** Assumes domain-specific lenses (Architect for data/subsystems, UI/UX for flows/screens, Security for auth/RBAC, DevOps for telemetry/deployments) to digest requirements into `docs/tech/`.
+- **Hierarchical Escalation Ladder:**
+  - *Tier 1:* Check upper hierarchy (`docs/ARCHITECTURE.md`) to resolve dilemmas from existing invariants.
+  - *Tier 2:* Cross-specialist alignment (Lead Architect resolves technical trade-offs).
+  - *Tier 3:* Escalate to human user with structured options if an unresolved product/business trade-off exists.
+
 ---
 
 ## 3. Downstream Design Question Resolution Loop

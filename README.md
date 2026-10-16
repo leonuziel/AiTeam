@@ -90,6 +90,7 @@ graph TD
 | **Persona B: Doc-Sync Custodian** | State & ADR Manager | Checks invariant conflicts, applies atomic doc patches, logs ADRs in `docs/decisions/`, and records revision history. |
 | **Persona C: Implementer** | Code & Test Producer | **Read-Before-Write.** Reads specs first. Adheres 100% to invariants. Self-audits with `scripts/audit_repo.py` before exit. |
 | **Persona D: Context Ingestion** | Knowledge Absorber | Takes raw notes, user brainstorms, or PRDs and cleanly maps them into `docs/` with extracted invariants without writing premature code. |
+| **Persona E: Specialist Digesters** | Domain-Specific Architecture | Assumes specialist roles (Architect, UI/UX, Security, DevOps) to digest requirements into `docs/tech/` and surface design questions. |
 
 ---
 
@@ -114,7 +115,24 @@ must be retried 3 times with exponential backoff before canceling. Webhooks must
 
 ---
 
-### Lifecycle B: Answering Downstream Design Questions ("Design Resolution")
+### Lifecycle B: Dynamic Specialist Digestion & Hierarchical Questions
+*Workflow Reference:* [.agent/workflows/requirement_digestion_loop.md](file:///d:/Workspace/AiTeam/.agent/workflows/requirement_digestion_loop.md)
+
+Product requirements can be digested by the agent using **whatever specialist lens fits best**:
+- 🏛️ **System Architect:** Translates user stories into relational/document data models (`docs/tech/data/`) and subsystem decomposition (`docs/tech/modules/`).
+- 🎨 **UI/UX Specialist:** Derives user interaction sequences, component state machines, optimistic UI updates, and responsive breakpoints.
+- 🔒 **Security Specialist:** Formulates authentication/authorization policies, RBAC roles, encryption at rest/in transit, and threat mitigations.
+- 🚀 **DevOps & SRE:** Derives environment tiers, health probe endpoints (`/healthz`, `/ready`), and structured JSON logging schemas.
+
+#### The 3-Tier Hierarchical Question Ladder:
+When a specialist encounters an unhandled dilemma:
+1. **Tier 1 (Upper Documentation Hierarchy):** Can the dilemma be solved by constraints already in `docs/ARCHITECTURE.md`? If yes, apply the rule and record the revision.
+2. **Tier 2 (Cross-Specialist Alignment):** Can the Lead Architect or System Specialist resolve the UI/data dilemma based on documented performance invariants? If yes, resolve and generate an ADR.
+3. **Tier 3 (Human User Escalation):** If it represents an unresolvable business/product trade-off, bubble it up to the human user as a structured **`[DESIGN QUESTION]`** package with Option A vs. Option B and an agent recommendation.
+
+---
+
+### Lifecycle C: Answering Downstream Design Questions ("Design Resolution")
 *Workflow Reference:* [.agent/workflows/design_resolution_loop.md](file:///d:/Workspace/AiTeam/.agent/workflows/design_resolution_loop.md)
 
 When an implementer agent is writing code and hits an architectural fork in the road (e.g., PostgreSQL vs. MongoDB, error code format, or rate limiting headers), **it is forbidden from guessing silently in code**.
@@ -150,7 +168,7 @@ Option A &mdash; Preserves sub-10ms API latency requirements defined in docs/tec
 
 ---
 
-### Lifecycle C: Implementation & Continuous Parity
+### Lifecycle D: Implementation & Continuous Parity
 *Workflow Reference:* [.agent/workflows/code_review_loop.md](file:///d:/Workspace/AiTeam/.agent/workflows/code_review_loop.md)
 
 1. **Read-Before-Write:** The implementer reads `docs/tech/modules/<module>/architecture.md` and related contracts.
@@ -160,6 +178,18 @@ Option A &mdash; Preserves sub-10ms API latency requirements defined in docs/tec
    python scripts/check_doc_drift.py    # Ensures 100% parity between docs/ and src/
    python scripts/audit_repo.py         # Complete repository health check
    ```
+
+---
+
+### Lifecycle E: Full Autonomous Cascade (Overnight / Hands-Off Execution)
+*Workflow Reference:* [.agent/workflows/autonomous_pipeline_loop.md](file:///d:/Workspace/AiTeam/.agent/workflows/autonomous_pipeline_loop.md)
+
+When you want an agent to autonomously execute from raw product intent directly to working, tested code without manual milestone intervention:
+- Chain: `Context Ingestion` $\rightarrow$ `Specialist Digestion` $\rightarrow$ `Auto-Resolve Design Questions (via Agent Recommendations)` $\rightarrow$ `Implementation` $\rightarrow$ `Health Audit`.
+- Trigger via chat prompt or using the Antigravity `/goal` slash command:
+  ```text
+  /goal Ingest feature notes, digest into technical design, resolve all questions into ADRs, implement code and unit tests, and do not stop until python scripts/audit_repo.py reports 100% health.
+  ```
 
 ---
 

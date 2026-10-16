@@ -105,13 +105,24 @@ When operating in an agentic environment (such as Antigravity), switch between t
   4. Appends a date-stamped revision log to `## 4. Decisions & Revisions`.
   5. Verifies structural compliance with `python scripts/lint_docs.py --strict`.
 
+### Persona E: Dynamic Specialist Digesters (Architect, UI/UX, Security, DevOps)
+- **Role:** Assumes specialized perspectives to digest product requirements into concrete technical architectures before code is written.
+  - **System Architect:** Subsystem decomposition, schemas, and persistence boundaries (`docs/tech/data/`, `docs/tech/modules/`).
+  - **UI/UX Specialist:** Interaction flows, component state charts, accessibility invariants (`docs/product/domains/`, `docs/tech/modules/ui/`).
+  - **Security Specialist:** AuthN/AuthZ contracts, encryption, RBAC, secret policies.
+  - **DevOps / SRE:** Environment topologies, container constraints, structured logging, health probes (`docs/operations/`).
+- **Hierarchical Escalation Ladder:**
+  - **Tier 1:** Resolve dilemma against upper hierarchy (`docs/ARCHITECTURE.md` invariants).
+  - **Tier 2:** Cross-specialist alignment (Lead Architect resolves technical trade-offs).
+  - **Tier 3:** Escalate to human user if a true business/product fork in the road exists.
+
 ---
 
 ## 5. Downstream Design Question Resolution Protocol
 
-When a downstream agent (implementer, refactorer, tester) hits an architectural fork in the road:
-1. **Formulate Options:** Frame the question as a decision package with evaluated alternatives (Option A vs. Option B), trade-offs, and an agent recommendation.
-2. **Present to Orchestrator / User:** Transparently present the dilemma.
+When any specialist or downstream agent hits an architectural fork in the road:
+1. **Formulate Options:** Frame the question as a decision package with evaluated alternatives (Option A vs. Option B), trade-offs, and a specialist recommendation.
+2. **Hierarchical Escalation:** Check upper documentation hierarchy first. If unresolved, present to Orchestrator / User.
 3. **Record Accepted Decision:**
    - For major architectural pivots: generate an ADR via `python scripts/record_decision.py --adr "<title>" --context "<context>"`.
    - For contract/parameter decisions: append to the target document via `python scripts/record_decision.py --append <file> "<decision>"`.
