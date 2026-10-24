@@ -88,13 +88,20 @@ When operating in an agentic environment (such as Antigravity), switch between t
 - **Rules:**
   1. **Read-Before-Write:** Must read the relevant documentation file(s) before touching any code.
   2. **Strict Adherence:** Comply 100% with the `## Invariants` section.
-  3. **Escalation Trigger:** If an ambiguity, unhandled error state, or missing business rule is encountered, stop execution and emit a formal escalation block:
+  3. **Critical Escalation Rule:** If a requirement or invariant is missing from `/docs`, you are strictly prohibited from generating code. You must immediately output the exact string format:
+     `[BLOCKED_NEED_DECISION: <exact ambiguity description>]`
+     followed by the structured escalation block:
      ```text
-     [ESCALATION REQUIRED]
+     [BLOCKED_NEED_DECISION: <exact ambiguity description>]
      - Target Doc: [e.g., docs/tech/api/contracts.md]
      - Ambiguity: [Exact description of what is missing or unclear]
      - Impact: [Why implementation cannot safely proceed without a decision]
+     - Options:
+       1. [Option A]
+       2. [Option B]
      ```
+     This triggers the Orchestrator to prompt the user immediately.
+
 
 ---
 

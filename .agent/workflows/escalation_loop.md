@@ -23,7 +23,7 @@ sequenceDiagram
     participant DocSync as Doc-Sync Custodian
 
     Implementer->>Implementer: Encounters ambiguous requirement or missing contract
-    Implementer->>Orchestrator: Emit [ESCALATION REQUIRED] block & Halt code edits
+    Implementer->>Orchestrator: Emit [BLOCKED_NEED_DECISION: <description>] & Halt code edits
     Orchestrator->>Orchestrator: Inspect docs/ tree for existing resolution
     alt Resolution Found in Parent Spec
         Orchestrator->>Implementer: Provide documented spec link & unblock
@@ -35,11 +35,11 @@ sequenceDiagram
     end
 ```
 
-### Escalation Block Format
+### Escalation Block Format (Machine-Enforced Token)
 When halting, the Implementer must output this exact structure:
 
 ```text
-[ESCALATION REQUIRED]
+[BLOCKED_NEED_DECISION: <exact ambiguity description>]
 - Target Specification: docs/tech/api/contracts.md
 - Context: Implementing public user registration endpoint
 - Missing Decision: Password complexity minimum requirements and lockout threshold

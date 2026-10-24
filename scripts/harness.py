@@ -92,6 +92,21 @@ def main():
     # Install hooks command
     subparsers.add_parser("install-hooks", help="Install local Git pre-commit hooks")
 
+    # Changelist command
+    changelist_parser = subparsers.add_parser("changelist", help="Track, generate, release, or verify changelist entries")
+    changelist_parser.add_argument("action", nargs="?", default="verify", help="Changelist action (verify, record, generate, release)")
+
+    # Test runner command
+    subparsers.add_parser("test", help="Run full unit and invariant verification test suite")
+
+    # Pack context command
+    pack_parser = subparsers.add_parser("pack", help="Pack targeted context, specs, and invariants for subagents")
+    pack_parser.add_argument("--domain", help="Product domain to include")
+    pack_parser.add_argument("--module", help="Technical module to include")
+    pack_parser.add_argument("--target", help="Specific document to pack")
+    pack_parser.add_argument("--output", "-o", help="Output path for context pack")
+    pack_parser.add_argument("--no-adrs", action="store_true", help="Exclude architecture decision records")
+
     args, unknown = parser.parse_known_args()
 
     if not args.command:
@@ -146,6 +161,24 @@ def main():
         sys.exit(run_script("bootstrap_project.py", ["--name", args.name, "--description", args.description] + unknown))
     elif args.command == "install-hooks":
         sys.exit(run_script("install_hooks.py", unknown))
+    elif args.command == "changelist":
+        cli_args = [args.action] if args.action else []
+        sys.exit(run_script("track_changelist.py", cli_args + unknown))
+    elif args.command == "test":
+        sys.exit(run_script("run_tests.py", unknown))
+    elif args.command == "pack":
+        cli_args = []
+        if args.domain:
+            cli_args += ["--domain", args.domain]
+        if args.module:
+            cli_args += ["--module", args.module]
+        if args.target:
+            cli_args += ["--target", args.target]
+        if args.output:
+            cli_args += ["-o", args.output]
+        if args.no_adrs:
+            cli_args += ["--no-adrs"]
+        sys.exit(run_script("pack_context.py", cli_args + unknown))
 
 if __name__ == "__main__":
     main()

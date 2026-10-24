@@ -15,6 +15,7 @@ if hasattr(sys.stdout, "reconfigure"):
         pass
 
 CORE_FILES = [
+    "ARCHITECTURE.md",
     "meta_generator_guide.md",
     "agent_system_prompt.md",
     "agent_extensions.md",
@@ -53,6 +54,15 @@ CORE_FILES = [
     "scripts/resolve_question.py",
     "scripts/generate_doc_index.py",
     "docs/INDEX.md",
+    "CHANGELOG.md",
+    "docs/CHANGELOG.md",
+    "docs/operations/changelist.md",
+    ".agent/workflows/changelist_tracking_loop.md",
+    "scripts/track_changelist.py",
+    "scripts/pack_context.py",
+    "scripts/run_tests.py",
+    "LICENSE",
+    "SECURITY.md",
     "mcp_config.json"
 ]
 
@@ -102,6 +112,16 @@ def audit():
     # 4. Living Documentation Index Check
     total_checks += 1
     if run_step("Living Documentation Index Completeness", ["scripts/generate_doc_index.py", "--check"]):
+        passed_checks += 1
+
+    # 5. Changelist Tracking Integrity Check
+    total_checks += 1
+    if run_step("Changelist Tracking Integrity", ["scripts/track_changelist.py", "verify"]):
+        passed_checks += 1
+
+    # 6. Automated Invariant & Unit Test Suite
+    total_checks += 1
+    if run_step("Automated Invariant & Unit Test Suite", ["scripts/run_tests.py"]):
         passed_checks += 1
 
     # Summary

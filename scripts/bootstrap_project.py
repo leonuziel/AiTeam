@@ -44,7 +44,7 @@ def bootstrap(name: str, description: str):
         product_overview.write_text(updated_content, encoding="utf-8")
         print(f"  ✅ Updated docs/product/overview.md title")
 
-    # 3. Check / Initialize Git
+    # 3. Check / Initialize Git & Install Pre-Commit Hooks
     git_dir = Path(".git")
     if not git_dir.exists():
         try:
@@ -54,6 +54,14 @@ def bootstrap(name: str, description: str):
             print("  ℹ️  Git initialization skipped (git command not available or already managed)")
     else:
         print("  ℹ️  Git repository already initialized.")
+
+    hooks_installer = Path("scripts/install_hooks.py")
+    if hooks_installer.exists():
+        try:
+            subprocess.run([sys.executable, str(hooks_installer)], check=True, capture_output=True)
+            print("  ✅ Automatically installed Doc-to-Code Git pre-commit hooks")
+        except Exception as e:
+            print(f"  ⚠️  Could not install git hooks: {e}")
 
     # 4. Run full health audit
     print("\n▶ Running health audit on fresh project...")

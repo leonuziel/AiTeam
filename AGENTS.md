@@ -60,6 +60,7 @@ graph TD
 ### Role 4: Implementer (Code Producer)
 - **Read-Before-Write:** Reads the relevant documentation files under `docs/` before touching any code in `src/` or `tests/`.
 - **Strict Compliance:** Adheres 100% to documented invariants.
+- **Fail-Fast Escalation Token:** If an invariant or contract is missing, immediately halt and emit `[BLOCKED_NEED_DECISION: <exact ambiguity description>]`. Never generate code while blocked.
 - **Self-Auditing:** Runs `python scripts/audit_repo.py` before completing any task.
 
 ---
@@ -68,9 +69,10 @@ graph TD
 
 When an Implementer or downstream agent hits an architectural fork in the road, unhandled edge case, or missing schema contract:
 1. **Never guess or invent business logic silently in code.**
-2. **Formulate a structured decision package:** Present Context, Target Doc, Options A vs. B with trade-offs, and an Agent Recommendation.
-3. **Capture the Decision:** Record into an ADR (`python scripts/record_decision.py --adr "<title>"`) or append to the target document.
-4. **Resume Code Generation:** Only proceed with code once the documentation reflects the resolution.
+2. **Emit Programmatic Block Token:** Output `[BLOCKED_NEED_DECISION: <exact ambiguity description>]`.
+3. **Formulate a structured decision package:** Present Context, Target Doc, Options A vs. B with trade-offs, and an Agent Recommendation.
+4. **Capture the Decision:** Record into an ADR (`python scripts/record_decision.py --adr "<title>"`) or append to the target document.
+5. **Resume Code Generation:** Only proceed with code once the documentation reflects the resolution.
 
 ---
 
@@ -105,5 +107,8 @@ All repository governance, auditing, and scaffolding operations are accessible v
 | `python scripts/harness.py append` | `scripts/record_decision.py` | Appends an atomic revision log to a document |
 | `python scripts/harness.py test-gen` | `scripts/generate_invariant_tests.py` | Scaffolds automated invariant test stubs from documentation |
 | `python scripts/harness.py install-hooks` | `scripts/install_hooks.py` | Installs local Git pre-commit enforcement hooks |
+| `python scripts/harness.py test` | `scripts/run_tests.py` | Runs invariant verification and unit test suite |
+| `python scripts/harness.py pack` | `scripts/pack_context.py` | Bundles minimal targeted specs, invariants, and ADRs for subagents |
+| `python scripts/harness.py changelist` | `scripts/track_changelist.py` | Tracks, auto-detects diffs, and verifies changelist entries in `docs/CHANGELOG.md` |
 | `python scripts/harness.py bootstrap` | `scripts/bootstrap_project.py` | Bootstraps a fresh downstream project from this template |
 

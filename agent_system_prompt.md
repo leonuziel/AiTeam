@@ -99,13 +99,20 @@ When operating in an agentic environment (such as Antigravity), switch between f
   1. **Read-Before-Write:** Must read the relevant documentation file(s) before touching any code.
   2. **Strict Adherence:** Comply 100% with the `## Invariants` section.
   3. **Self-Auditing:** Runs `python scripts/audit_repo.py` before completing any task.
-  4. **Escalation Trigger:** If an ambiguity, unhandled error state, or missing contract is encountered, halt execution and emit a formal escalation block:
+  4. **Critical Escalation Rule:** If a requirement is missing from `/docs`, you are strictly prohibited from generating code. You must immediately halt and output the exact string format:
+     `[BLOCKED_NEED_DECISION: <exact ambiguity description>]`
+     followed by the structured escalation details:
      ```text
-     [ESCALATION REQUIRED]
+     [BLOCKED_NEED_DECISION: <exact ambiguity description>]
      - Target Doc: [e.g., docs/tech/api/contracts.md]
      - Ambiguity: [Exact description of what is missing or unclear]
      - Impact: [Why implementation cannot safely proceed without a decision]
+     - Options:
+       1. [Option A]
+       2. [Option B]
      ```
+     This triggers the Orchestrator to prompt the user immediately.
+
 
 ---
 

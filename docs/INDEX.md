@@ -38,7 +38,9 @@ graph TD
 | Specification | Scope | Summary | Related Links |
 | :--- | :--- | :--- | :--- |
 | [System Architecture & Routing Map](ARCHITECTURE.md) | Global System Topology & Routing | Owns: Root documentation routing map, global architectural topology, cross-domain coordination rules, and overarching sy... | docs/product/overview.md, docs/tech/overview.md |
+| [Repository Changelog & Revision Ledger](CHANGELOG.md) | Global Project - Changelist History & Release Notes | Owns: The authoritative living ledger of all versioned changes, feature releases, invariant modifications, and bug fixes... | docs/ARCHITECTURE.md, docs/operations/changelist.md |
 | [Architecture Decision Records (ADRs) Guide](decisions/README.md) | Architecture Decision Log & Governance | Owns: Historical repository for all binding architectural, technical, and operational decisions recorded across project ... | docs/ARCHITECTURE.md, docs/tech/overview.md |
+| [Changelist & Revision Tracking](operations/changelist.md) | Operations & Lifecycle - Changelist Tracking & Traceability | Owns: Standards, schema contracts, validation rules, and automation workflows for recording and maintaining atomic chang... | docs/ARCHITECTURE.md, docs/CHANGELOG.md, docs/operations/deployment.md |
 | [Deployment & Environment Topology](operations/deployment.md) | Operations & Infrastructure - Deployment Lifecycle | Owns: Target environments (local, staging, production), containerization contracts, CI/CD pipeline stages, and secret ma... | docs/ARCHITECTURE.md, docs/operations/telemetry.md |
 | [Telemetry, Observability & Health Monitoring](operations/telemetry.md) | Operations & Observability - Logging, Metrics, Tracing & Health | Owns: Structured logging conventions, application metrics collection, distributed tracing propagation, and health check ... | docs/ARCHITECTURE.md, docs/operations/deployment.md |
 | [Product Domain Specifications Guide](product/domains/README.md) | Product Strategy - Domain Module Layout | Owns: Directory topology and structural guidance for all functional domain modules placed under docs/product/domains/<do... | docs/product/overview.md, docs/ARCHITECTURE.md |
@@ -51,4 +53,4 @@ graph TD
 | [Technical Architecture Overview](tech/overview.md) | Global Technology Stack & Engineering Conventions | Owns: Baseline technology stack selection, cross-cutting architectural patterns, coding conventions, and global technica... | docs/ARCHITECTURE.md, docs/product/overview.md |
 
 ## 4. Decisions & Revisions
-- 2026-10-16: Auto-generated living documentation index cataloging 12 specification leaves.
+- 2026-10-24: Auto-generated living documentation index cataloging 14 specification leaves.

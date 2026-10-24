@@ -9,8 +9,9 @@ Please confirm that your changes adhere to repository invariants before requesti
 - [ ] **1. Specification Synchronization:** Relevant documentation files under `docs/` have been created or updated.
 - [ ] **2. Invariant Compliance:** No non-negotiable rules under `## 2. Invariants (Hard Rules)` have been violated.
 - [ ] **3. Decisions & Revisions:** All changes are accompanied by a date-stamped revision log under `## 4. Decisions & Revisions` or a new ADR in `docs/decisions/`.
-- [ ] **4. Parity & Test Suite:** Application code in `src/` matches specifications 1:1, and test suites in `tests/` pass.
-- [ ] **5. Master Audit:** `python scripts/harness.py audit` passes with a **100% health score**.
+- [ ] **4. Parity & Test Suite:** Application code in `src/` matches specifications 1:1, and test suites pass (`python scripts/harness.py test`).
+- [ ] **5. Changelist Tracking:** Atomic change recorded in `docs/CHANGELOG.md` (`python scripts/harness.py changelist record`).
+- [ ] **6. Master Audit:** `python scripts/harness.py audit` passes with a **100% health score**.
 
 ---
 
