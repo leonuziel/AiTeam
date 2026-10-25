@@ -113,6 +113,7 @@ All repository governance, auditing, and scaffolding operations are accessible v
 | :--- | :--- | :--- |
 | `python scripts/harness.py audit` | `scripts/audit_repo.py` | Complete 42-point repository health and agent readiness audit |
 | `python scripts/harness.py lint --strict` | `scripts/lint_docs.py` | Validates documentation 4-section structure and link integrity |
+| `python scripts/harness.py lint-imports` | `scripts/lint_imports.py` | Lints architectural dependency boundaries and circular import cycles |
 | `python scripts/harness.py parity` | `scripts/check_doc_drift.py` | Audits doc-to-code parity and flags undocumented code modules |
 | `python scripts/harness.py index` | `scripts/generate_doc_index.py` | Generates or verifies living documentation index (`docs/INDEX.md`) |
 | `python scripts/harness.py ingest` | `scripts/ingest_context.py` | Ingests raw context and updates targeted documentation sections |

@@ -37,6 +37,7 @@ CORE_FILES = [
     "scripts/checkpoint_state.py",
     "scripts/scan_secrets.py",
     "scripts/autopilot.py",
+    "scripts/lint_imports.py",
     "scripts/lint_docs.py",
     "scripts/scaffold_module.py",
     "scripts/record_decision.py",
@@ -137,6 +138,11 @@ def audit():
     # 8. Secret & Credential Leakage Audit
     total_checks += 1
     if run_step("Secret & Credential Leakage Audit", ["scripts/scan_secrets.py"]):
+        passed_checks += 1
+
+    # 9. Architectural Dependency Boundary & Import Audit
+    total_checks += 1
+    if run_step("Architectural Dependency Boundary & Import Audit", ["scripts/lint_imports.py", "--strict"]):
         passed_checks += 1
 
     # Summary

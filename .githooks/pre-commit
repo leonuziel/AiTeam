@@ -28,5 +28,13 @@ if [ $SECRETS_EXIT -ne 0 ]; then
   exit 1
 fi
 
+python scripts/lint_imports.py --strict
+IMPORTS_EXIT=$?
+
+if [ $IMPORTS_EXIT -ne 0 ]; then
+  echo "❌ Pre-commit check failed: Architectural import boundary violation or circular dependency detected."
+  exit 1
+fi
+
 echo "✨ [Doc-to-Code] All pre-commit compliance checks passed!"
 exit 0

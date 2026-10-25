@@ -41,6 +41,10 @@ def main():
     lint_parser = subparsers.add_parser("lint", help="Lint documentation structure, 4 sections, and links")
     lint_parser.add_argument("--strict", action="store_true", help="Fail on warnings or broken links")
 
+    # Lint imports command
+    lint_imports_parser = subparsers.add_parser("lint-imports", help="Lint architectural dependency boundaries and circular imports")
+    lint_imports_parser.add_argument("--strict", action="store_true", help="Fail on any boundary warning")
+
     # Parity command
     subparsers.add_parser("parity", help="Check doc-to-code parity and detect architectural drift")
 
@@ -82,6 +86,8 @@ def main():
     resolve_parser.add_argument("--target", help="Target document path")
     resolve_parser.add_argument("--choice", help="Selected option summary")
     resolve_parser.add_argument("--context", default="", help="Context & trade-off rationale")
+    resolve_parser.add_argument("--package", help="JSON string or path to JSON decision package")
+    resolve_parser.add_argument("--scaffold-package", action="store_true", help="Print a blank JSON escalation decision package")
     resolve_parser.add_argument("--interactive", action="store_true", help="Launch interactive prompt")
 
     # Index command
@@ -142,6 +148,9 @@ def main():
     elif args.command == "lint":
         cli_args = ["--strict"] if args.strict else []
         sys.exit(run_script("lint_docs.py", cli_args + unknown))
+    elif args.command == "lint-imports":
+        cli_args = ["--strict"] if args.strict else []
+        sys.exit(run_script("lint_imports.py", cli_args + unknown))
     elif args.command == "parity":
         sys.exit(run_script("check_doc_drift.py", unknown))
     elif args.command == "ingest":
@@ -168,6 +177,10 @@ def main():
             cli_args += ["--choice", args.choice]
         if args.context:
             cli_args += ["--context", args.context]
+        if args.package:
+            cli_args += ["--package", args.package]
+        if args.scaffold_package:
+            cli_args.append("--scaffold-package")
         if args.interactive:
             cli_args += ["--interactive"]
         sys.exit(run_script("resolve_question.py", cli_args + unknown))
