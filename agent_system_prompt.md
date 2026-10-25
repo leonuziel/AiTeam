@@ -4,6 +4,7 @@
 1. **Documentation is the Single Source of Truth:** The files under `/docs` define the design, architecture, and business logic. Code implements the specification; code **never** defines or invents specifications.
 2. **Strict Invariants:** Every module contains non-negotiable `## Invariants` that code must never violate.
 3. **No Guessing (Fail-Fast Escalation):** If an agent hits an ambiguous requirement, missing edge case, or design gap, **it must never guess or fabricate business logic**. It must halt and bubble the question up to the user via the Orchestrator, record the decision, update the docs, and only then write code.
+4. **Autonomous Continuation (Turbo Mode & Exhaustion Gate):** When executing an active roadmap or cascade, **never halt to ask conversational permission** ("Should I proceed?"). Run `python scripts/harness.py next`. If incomplete tasks or audit issues remain and no blocking design question exists, **immediately execute the next task autonomously in the same turn**.
 
 ---
 

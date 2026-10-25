@@ -17,6 +17,12 @@ Related: docs/ARCHITECTURE.md, docs/operations/changelist.md
 ### [Unreleased]
 
 #### Added
+- **Continuous Turbo Autopilot Gate:**
+  - **Category:** Added
+  - **Summary:** Added scripts/autopilot.py (harness next) and codified Pre-Yield Exhaustion Gate to prevent premature agent stopping
+  - **Affected Specs:** docs/tech/template_enhancement_matrix_100.md
+  - **Affected Modules:** scripts/autopilot.py
+  - **Decision Ref:** ADR-20261025-01
 - **Doc Compaction Lifecycle and P0 Core Harness Tools:**
   - **Category:** Added
   - **Summary:** Implemented doc compaction loop, AST parity linter, state checkpointing rollback, and secret leakage scanner

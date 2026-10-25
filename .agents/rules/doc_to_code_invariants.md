@@ -16,3 +16,7 @@ Always adhere to these rules when working in this workspace:
 
 4. **Self-Auditing:**
    - Run `python scripts/audit_repo.py` and `python scripts/lint_docs.py --strict` to verify changes before marking any task as complete.
+
+5. **Continuous Auto-Advancement (Turbo Mode & Exhaustion Gate):**
+   - When an active roadmap or backlog is assigned, **never halt prematurely to ask for conversational confirmation** ("Should I proceed?", "Would you like me to continue?").
+   - Before yielding a turn, verify task completion via `python scripts/harness.py next`. If incomplete tasks or audit issues remain and no blocking design question exists, **immediately execute the next task autonomously in the same turn**.

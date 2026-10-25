@@ -36,6 +36,7 @@ CORE_FILES = [
     "scripts/compact_docs.py",
     "scripts/checkpoint_state.py",
     "scripts/scan_secrets.py",
+    "scripts/autopilot.py",
     "scripts/lint_docs.py",
     "scripts/scaffold_module.py",
     "scripts/record_decision.py",

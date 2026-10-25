@@ -17,6 +17,9 @@ All AI agents and assistants working in this codebase must adhere strictly to:
 - **Continuous Cleanliness:** [.agent/workflows/continuous_cleanliness_loop.md](file:///d:/Workspace/AiTeam/.agent/workflows/continuous_cleanliness_loop.md) &mdash; Hygiene checks.
 - **Doc Compaction & Lifecycle:** [.agent/workflows/doc_compaction_loop.md](file:///d:/Workspace/AiTeam/.agent/workflows/doc_compaction_loop.md) &mdash; Squash Section 4 revisions & archive obsolete ADRs.
 
+### Continuous Turbo Execution
+When executing roadmaps or feature cascades, never halt prematurely to ask conversational confirmation ("Should I proceed?"). Run `python scripts/harness.py next` to verify task status and auto-advance autonomously until all tasks are exhausted.
+
 ### Verification Commands
 Before completing any task, execute:
 ```bash

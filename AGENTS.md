@@ -14,6 +14,8 @@
    Every module in `docs/` contains non-negotiable `## 2. Invariants (Hard Rules)`. Your generated code, tests, and configurations must never violate these invariants.
 3. **Fail-Fast Escalation (No Guessing):**  
    If you hit an ambiguous requirement, missing edge case, unhandled error code, or design gap, **never guess or fabricate business logic**. Immediately halt, escalate the question to the user via the Orchestrator, record the decision in the docs via Doc-Sync, and only then write code.
+4. **Autonomous Continuation (The Pre-Yield Exhaustion Gate / Turbo Mode):**  
+   When executing a roadmap, feature cascade, or task backlog, **never prematurely halt to ask conversational permission** ("Should I proceed?", "Would you like me to continue?"). Before yielding a turn, verify task completion via `python scripts/harness.py next`. If incomplete tasks or audit issues remain and no blocking design question exists, **immediately proceed to execute the next item autonomously in the same turn**.
 
 ---
 
@@ -112,6 +114,7 @@ All repository governance, auditing, and scaffolding operations are accessible v
 | `python scripts/harness.py compact` | `scripts/compact_docs.py` | Audits and squashes Section 4 revisions & archives superseded ADRs |
 | `python scripts/harness.py checkpoint` | `scripts/checkpoint_state.py` | Manages repository state checkpoints and autonomous rollbacks |
 | `python scripts/harness.py scan-secrets` | `scripts/scan_secrets.py` | Scans repository and staged diffs for credentials & API key leaks |
+| `python scripts/harness.py next` | `scripts/autopilot.py` | Inspects roadmap & task queue to force continuous turbo execution |
 | `python scripts/harness.py changelist` | `scripts/track_changelist.py` | Tracks, auto-detects diffs, and verifies changelist entries in `docs/CHANGELOG.md` |
 | `python scripts/harness.py bootstrap` | `scripts/bootstrap_project.py` | Bootstraps a fresh downstream project from this template |
 

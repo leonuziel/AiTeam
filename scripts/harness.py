@@ -126,6 +126,11 @@ def main():
     scan_secrets_parser.add_argument("--staged", action="store_true", help="Scan only git staged files")
     scan_secrets_parser.add_argument("--path", help="Scan a specific file or directory")
 
+    # Autopilot / Turbo command
+    autopilot_parser = subparsers.add_parser("autopilot", aliases=["next"], help="Inspect active roadmap & task queue for continuous turbo execution")
+    autopilot_parser.add_argument("--complete", "-c", help="Mark a task as completed in active roadmap")
+    autopilot_parser.add_argument("--json", action="store_true", help="Output machine-readable JSON")
+
     args, unknown = parser.parse_known_args()
 
     if not args.command:
@@ -225,6 +230,13 @@ def main():
         if args.path:
             cli_args += ["--path", args.path]
         sys.exit(run_script("scan_secrets.py", cli_args + unknown))
+    elif args.command in ("autopilot", "next"):
+        cli_args = []
+        if args.complete:
+            cli_args += ["--complete", args.complete]
+        if args.json:
+            cli_args.append("--json")
+        sys.exit(run_script("autopilot.py", cli_args + unknown))
 
 if __name__ == "__main__":
     main()
