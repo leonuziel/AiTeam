@@ -109,6 +109,9 @@ All repository governance, auditing, and scaffolding operations are accessible v
 | `python scripts/harness.py install-hooks` | `scripts/install_hooks.py` | Installs local Git pre-commit enforcement hooks |
 | `python scripts/harness.py test` | `scripts/run_tests.py` | Runs invariant verification and unit test suite |
 | `python scripts/harness.py pack` | `scripts/pack_context.py` | Bundles minimal targeted specs, invariants, and ADRs for subagents |
+| `python scripts/harness.py compact` | `scripts/compact_docs.py` | Audits and squashes Section 4 revisions & archives superseded ADRs |
+| `python scripts/harness.py checkpoint` | `scripts/checkpoint_state.py` | Manages repository state checkpoints and autonomous rollbacks |
+| `python scripts/harness.py scan-secrets` | `scripts/scan_secrets.py` | Scans repository and staged diffs for credentials & API key leaks |
 | `python scripts/harness.py changelist` | `scripts/track_changelist.py` | Tracks, auto-detects diffs, and verifies changelist entries in `docs/CHANGELOG.md` |
 | `python scripts/harness.py bootstrap` | `scripts/bootstrap_project.py` | Bootstraps a fresh downstream project from this template |
 

@@ -20,5 +20,13 @@ if [ $DRIFT_EXIT -ne 0 ]; then
   exit 1
 fi
 
+python scripts/scan_secrets.py --staged
+SECRETS_EXIT=$?
+
+if [ $SECRETS_EXIT -ne 0 ]; then
+  echo "❌ Pre-commit check failed: Exposed secrets or credentials detected."
+  exit 1
+fi
+
 echo "✨ [Doc-to-Code] All pre-commit compliance checks passed!"
 exit 0

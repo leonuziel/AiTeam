@@ -107,6 +107,25 @@ def main():
     pack_parser.add_argument("--output", "-o", help="Output path for context pack")
     pack_parser.add_argument("--no-adrs", action="store_true", help="Exclude architecture decision records")
 
+    # Compact command
+    compact_parser = subparsers.add_parser("compact", help="Audit and compact historical Section 4 revisions and archive superseded ADRs")
+    compact_parser.add_argument("--audit", action="store_true", help="Audit docs for revision bloat")
+    compact_parser.add_argument("--threshold", type=int, default=8, help="Revision count threshold before flagging bloat")
+    compact_parser.add_argument("--squash", help="Target document path to squash historical Section 4 revisions")
+    compact_parser.add_argument("--squash-all", action="store_true", help="Batch squash all documents exceeding threshold")
+    compact_parser.add_argument("--archive-adrs", action="store_true", help="Move superseded/deprecated ADRs to archive/")
+    compact_parser.add_argument("--strict", action="store_true", help="Fail if bloat is detected")
+
+    # Checkpoint command
+    checkpoint_parser = subparsers.add_parser("checkpoint", help="Manage repository state checkpoints and autonomous rollbacks")
+    checkpoint_parser.add_argument("action", nargs="?", default="list", choices=["create", "restore", "list", "drop"], help="Checkpoint action")
+    checkpoint_parser.add_argument("name", nargs="?", default="", help="Checkpoint name or ID")
+
+    # Scan-secrets command
+    scan_secrets_parser = subparsers.add_parser("scan-secrets", help="Scan repository or staged changes for exposed credentials and API keys")
+    scan_secrets_parser.add_argument("--staged", action="store_true", help="Scan only git staged files")
+    scan_secrets_parser.add_argument("--path", help="Scan a specific file or directory")
+
     args, unknown = parser.parse_known_args()
 
     if not args.command:
@@ -179,6 +198,33 @@ def main():
         if args.no_adrs:
             cli_args += ["--no-adrs"]
         sys.exit(run_script("pack_context.py", cli_args + unknown))
+    elif args.command == "compact":
+        cli_args = []
+        if args.audit:
+            cli_args.append("--audit")
+        if args.threshold != 8:
+            cli_args += ["--threshold", str(args.threshold)]
+        if args.squash:
+            cli_args += ["--squash", args.squash]
+        if args.squash_all:
+            cli_args.append("--squash-all")
+        if args.archive_adrs:
+            cli_args.append("--archive-adrs")
+        if args.strict:
+            cli_args.append("--strict")
+        sys.exit(run_script("compact_docs.py", cli_args + unknown))
+    elif args.command == "checkpoint":
+        cli_args = [args.action]
+        if args.name:
+            cli_args.append(args.name)
+        sys.exit(run_script("checkpoint_state.py", cli_args + unknown))
+    elif args.command == "scan-secrets":
+        cli_args = []
+        if args.staged:
+            cli_args.append("--staged")
+        if args.path:
+            cli_args += ["--path", args.path]
+        sys.exit(run_script("scan_secrets.py", cli_args + unknown))
 
 if __name__ == "__main__":
     main()

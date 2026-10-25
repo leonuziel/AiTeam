@@ -15,6 +15,7 @@ All AI agents and assistants working in this codebase must adhere strictly to:
 - **Escalation Protocol:** [.agent/workflows/escalation_loop.md](file:///d:/Workspace/AiTeam/.agent/workflows/escalation_loop.md) &mdash; Fail-fast on ambiguity.
 - **Doc-Sync Loop:** [.agent/workflows/doc_sync_loop.md](file:///d:/Workspace/AiTeam/.agent/workflows/doc_sync_loop.md) &mdash; Atomic doc updates & revision logging.
 - **Continuous Cleanliness:** [.agent/workflows/continuous_cleanliness_loop.md](file:///d:/Workspace/AiTeam/.agent/workflows/continuous_cleanliness_loop.md) &mdash; Hygiene checks.
+- **Doc Compaction & Lifecycle:** [.agent/workflows/doc_compaction_loop.md](file:///d:/Workspace/AiTeam/.agent/workflows/doc_compaction_loop.md) &mdash; Squash Section 4 revisions & archive obsolete ADRs.
 
 ### Verification Commands
 Before completing any task, execute:

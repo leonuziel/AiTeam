@@ -31,7 +31,11 @@ CORE_FILES = [
     ".agent/workflows/escalation_loop.md",
     ".agent/workflows/code_review_loop.md",
     ".agent/workflows/continuous_cleanliness_loop.md",
+    ".agent/workflows/doc_compaction_loop.md",
     "scripts/harness.py",
+    "scripts/compact_docs.py",
+    "scripts/checkpoint_state.py",
+    "scripts/scan_secrets.py",
     "scripts/lint_docs.py",
     "scripts/scaffold_module.py",
     "scripts/record_decision.py",
@@ -122,6 +126,16 @@ def audit():
     # 6. Automated Invariant & Unit Test Suite
     total_checks += 1
     if run_step("Automated Invariant & Unit Test Suite", ["scripts/run_tests.py"]):
+        passed_checks += 1
+
+    # 7. Documentation Lifecycle & Compaction Health
+    total_checks += 1
+    if run_step("Documentation Lifecycle & Compaction Health", ["scripts/compact_docs.py", "--audit", "--strict"]):
+        passed_checks += 1
+
+    # 8. Secret & Credential Leakage Audit
+    total_checks += 1
+    if run_step("Secret & Credential Leakage Audit", ["scripts/scan_secrets.py"]):
         passed_checks += 1
 
     # Summary

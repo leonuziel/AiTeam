@@ -17,6 +17,12 @@ Related: docs/ARCHITECTURE.md, docs/operations/changelist.md
 ### [Unreleased]
 
 #### Added
+- **Doc Compaction Lifecycle and P0 Core Harness Tools:**
+  - **Category:** Added
+  - **Summary:** Implemented doc compaction loop, AST parity linter, state checkpointing rollback, and secret leakage scanner
+  - **Affected Specs:** docs/tech/template_enhancement_matrix_100.md
+  - **Affected Modules:** scripts/compact_docs.py,scripts/checkpoint_state.py,scripts/scan_secrets.py
+  - **Decision Ref:** ADR-20261025-01
 - **100-Point Autonomous Harness Enhancement Matrix:**
   - **Category:** Added
   - **Summary:** Created exhaustive 100-point template enhancement matrix ordered by priority and benefit with symmetric pros/cons analysis

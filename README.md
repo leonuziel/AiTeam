@@ -303,9 +303,12 @@ Every directory in this repository has a strict, unambiguous purpose:
 │       └── README.md                   # ADR governance & lifecycle guide
 ├── scripts/                            # 🛠️ Autonomous Maintenance Tooling (Python 3.8+)
 │   ├── harness.py                      # 🚀 Unified Doc-to-Code CLI Entry Point
-│   ├── audit_repo.py                   # Master health & readiness auditor (42-point check)
+│   ├── audit_repo.py                   # Master health & readiness auditor (57-point check)
 │   ├── lint_docs.py                    # 4-section documentation & link integrity linter
-│   ├── check_doc_drift.py              # Doc-to-code parity & drift detector
+│   ├── check_doc_drift.py              # AST-based doc-to-code parity & drift detector
+│   ├── compact_docs.py                 # Doc compaction, revision squashing & ADR lifecycle
+│   ├── checkpoint_state.py             # Autonomous rollback & repository checkpoint manager
+│   ├── scan_secrets.py                 # Secret & credential leakage pre-commit scanner
 │   ├── ingest_context.py               # Ingests structured context into doc sections
 │   ├── scaffold_module.py              # Automated domain & module scaffolder
 │   ├── record_decision.py              # Doc-Sync atomic revision logger & ADR generator
