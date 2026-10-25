@@ -54,6 +54,13 @@ graph TD
 
 ### Role 3: Specialist Digesters (Technical Architecture)
 - Dynamically assumes domain-specific lenses (System Architect, UI/UX, Security, DevOps) to digest product requirements into technical contracts (`docs/tech/data/`, `docs/tech/api/`, `docs/tech/modules/`).
+- **SOLID Architectural Invariants:**
+  - *Single Responsibility (SRP):* Strict domain boundaries in Section 1. No "God modules"—each module owns one conceptual subsystem.
+  - *Open/Closed (OCP):* Design for extension via strategy patterns, registries, or events rather than editing monolithic switch blocks.
+  - *Liskov Substitution (LSP):* Polymorphic adapters must honor identical interface contracts and invariant constraints.
+  - *Interface Segregation (ISP):* Narrow, role-specific interfaces in Section 3; avoid bloated multi-purpose contracts.
+  - *Dependency Inversion (DIP):* Domain logic depends on abstract specifications, not concrete third-party SDKs or low-level drivers.
+  - *Pragmatic YAGNI:* Zero speculative abstractions without multiple concrete use cases or explicit documented need.
 - Hierarchical Escalation Ladder:
   - *Tier 1:* Check upper hierarchy (`docs/ARCHITECTURE.md`) to resolve dilemmas from existing invariants.
   - *Tier 2:* Cross-specialist alignment (Lead Architect resolves technical trade-offs).
@@ -62,6 +69,12 @@ graph TD
 ### Role 4: Implementer (Code Producer)
 - **Read-Before-Write:** Reads the relevant documentation files under `docs/` before touching any code in `src/` or `tests/`.
 - **Strict Compliance:** Adheres 100% to documented invariants.
+- **SOLID Code Standards:**
+  - *SRP:* Classes have one reason to change. Separate pure calculations from I/O (*Functional Core, Imperative Shell*). Files < 300–400 lines; functions < 30–50 lines.
+  - *OCP:* Use lookup tables or strategies over cascading `if/else` or `switch` blocks.
+  - *LSP:* Subclasses and adapters must fulfill all base contracts without unexpected exceptions.
+  - *ISP:* Small, focused method signatures. No forcing callers to pass unused dummy arguments.
+  - *DIP:* Invert dependencies via constructor injection (storage, network, clock, PRNG seeds) with sane defaults rather than binding global singletons (`localStorage`, `window`, `Math.random`).
 - **Fail-Fast Escalation Token:** If an invariant or contract is missing, immediately halt and emit `[BLOCKED_NEED_DECISION: <exact ambiguity description>]`. Never generate code while blocked.
 - **Self-Auditing:** Runs `python scripts/audit_repo.py` before completing any task.
 

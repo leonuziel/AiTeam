@@ -20,3 +20,11 @@ Always adhere to these rules when working in this workspace:
 5. **Continuous Auto-Advancement (Turbo Mode & Exhaustion Gate):**
    - When an active roadmap or backlog is assigned, **never halt prematurely to ask for conversational confirmation** ("Should I proceed?", "Would you like me to continue?").
    - Before yielding a turn, verify task completion via `python scripts/harness.py next`. If incomplete tasks or audit issues remain and no blocking design question exists, **immediately execute the next task autonomously in the same turn**.
+
+6. **Pragmatic SOLID & Clean Code Standards:**
+   - **SRP:** Classes have one reason to change; functions do one thing. Keep files < 300–400 lines; functions < 30–50 lines. Isolate pure logic from I/O (*Functional Core, Imperative Shell*).
+   - **OCP:** Use registries, strategy patterns, or dispatch maps rather than sprawling switch/if-else blocks.
+   - **LSP:** Adapter implementations must honor base contracts without throwing unexpected runtime exceptions.
+   - **ISP:** Keep interfaces lean. Do not force callers to provide unused dummy arguments.
+   - **DIP:** Invert dependencies via constructor injection (storage, network, clock, PRNG seeds) with default parameters. Never hardcode global singletons (`localStorage`, `window`, `Math.random`) inside core domain logic.
+   - **KISS & YAGNI:** Avoid speculative abstractions. Do not create an interface/factory without multiple concrete implementations or an explicit requirement.

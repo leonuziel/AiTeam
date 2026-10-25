@@ -89,6 +89,13 @@ When operating in an agentic environment (such as Antigravity), switch between f
   - **UI/UX Specialist:** Interaction flows, component state charts, accessibility invariants (`docs/product/domains/`, `docs/tech/modules/ui/`).
   - **Security Specialist:** AuthN/AuthZ contracts, encryption, RBAC, secret policies.
   - **DevOps / SRE:** Environment topologies, container constraints, structured logging, health probes (`docs/operations/`).
+- **SOLID Architectural Invariants:**
+  1. **Single Responsibility (SRP):** Enforce strict domain boundaries in Section 1 (`Responsibilities & Boundaries`). Avoid "God modules"—one module must own one conceptual subsystem.
+  2. **Open/Closed (OCP):** Design for extension via strategies, registries, or event dispatchers. Document clear extension points rather than monolithic switch blocks.
+  3. **Liskov Substitution (LSP):** Alternate implementations of an interface (e.g. storage adapters, audio drivers) must satisfy identical invariants, return types, and error envelopes.
+  4. **Interface Segregation (ISP):** Keep interface tables in Section 3 cohesive and narrow; split monolithic contracts into focused role-specific interfaces.
+  5. **Dependency Inversion (DIP):** High-level domains must depend on abstract interface contracts, not concrete drivers or third-party SDKs. Document injection points.
+  6. **Pragmatic YAGNI Guardrail:** Do not invent speculative abstractions without at least two concrete use cases or a documented requirement.
 - **Hierarchical Escalation Ladder:**
   - **Tier 1:** Resolve dilemma against upper hierarchy (`docs/ARCHITECTURE.md` invariants).
   - **Tier 2:** Cross-specialist alignment (Lead Architect resolves technical trade-offs).
@@ -99,8 +106,14 @@ When operating in an agentic environment (such as Antigravity), switch between f
 - **Rules:**
   1. **Read-Before-Write:** Must read the relevant documentation file(s) before touching any code.
   2. **Strict Adherence:** Comply 100% with the `## Invariants` section.
-  3. **Self-Auditing:** Runs `python scripts/audit_repo.py` before completing any task.
-  4. **Critical Escalation Rule:** If a requirement is missing from `/docs`, you are strictly prohibited from generating code. You must immediately halt and output the exact string format:
+  3. **SOLID Code Implementation Standards:**
+     - **SRP:** Classes have one reason to change; functions do one thing well. Separate pure calculation logic from I/O and side effects (*Functional Core, Imperative Shell*). Keep files focused (< 300–400 lines) and functions concise (< 30–50 lines).
+     - **OCP:** Use dispatch tables, maps, or strategy patterns instead of giant, error-prone `switch`/`if-else` cascades.
+     - **LSP:** Interface implementations must honor all preconditions, postconditions, and error contracts without throwing unexpected runtime exceptions.
+     - **ISP:** Keep interfaces lean. Do not force callers to provide unused dummy arguments.
+     - **DIP:** Inject external dependencies (storage backends, clocks, network clients, PRNG seeds) via constructor parameters with sane defaults, rather than hardcoding global singletons (`localStorage`, `window`, `Math.random`). This guarantees deterministic testability.
+  4. **Self-Auditing:** Runs `python scripts/audit_repo.py` before completing any task.
+  5. **Critical Escalation Rule:** If a requirement is missing from `/docs`, you are strictly prohibited from generating code. You must immediately halt and output the exact string format:
      `[BLOCKED_NEED_DECISION: <exact ambiguity description>]`
      followed by the structured escalation details:
      ```text

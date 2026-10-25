@@ -17,6 +17,12 @@ Related: docs/ARCHITECTURE.md, docs/operations/changelist.md
 ### [Unreleased]
 
 #### Added
+- **SOLID and Clean Architecture Principles:**
+  - **Category:** Added
+  - **Summary:** Incorporated pragmatic SOLID, Functional Core/Imperative Shell, and Clean Architecture standards into Architect and Implementer rules
+  - **Affected Specs:** docs/tech/template_enhancement_matrix_100.md
+  - **Affected Modules:** agent_system_prompt.md,AGENTS.md
+  - **Decision Ref:** ADR-20261025-01
 - **Continuous Turbo Autopilot Gate:**
   - **Category:** Added
   - **Summary:** Added scripts/autopilot.py (harness next) and codified Pre-Yield Exhaustion Gate to prevent premature agent stopping
