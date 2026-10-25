@@ -36,5 +36,21 @@ if [ $IMPORTS_EXIT -ne 0 ]; then
   exit 1
 fi
 
+python scripts/phantom_sentinel.py --strict
+SENTINEL_EXIT=$?
+
+if [ $SENTINEL_EXIT -ne 0 ]; then
+  echo "❌ Pre-commit check failed: Hallucinated phantom file or broken link detected."
+  exit 1
+fi
+
+python scripts/lint_doc_dag.py --strict
+DAG_EXIT=$?
+
+if [ $DAG_EXIT -ne 0 ]; then
+  echo "❌ Pre-commit check failed: Documentation hierarchy or cross-reference cycle violation detected."
+  exit 1
+fi
+
 echo "✨ [Doc-to-Code] All pre-commit compliance checks passed!"
 exit 0

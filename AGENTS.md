@@ -129,6 +129,10 @@ All repository governance, auditing, and scaffolding operations are accessible v
 | `python scripts/harness.py checkpoint` | `scripts/checkpoint_state.py` | Manages repository state checkpoints and autonomous rollbacks |
 | `python scripts/harness.py scan-secrets` | `scripts/scan_secrets.py` | Scans repository and staged diffs for credentials & API key leaks |
 | `python scripts/harness.py next` | `scripts/autopilot.py` | Inspects roadmap & task queue to force continuous turbo execution |
+| `python scripts/harness.py sentinel` | `scripts/phantom_sentinel.py` | Scans for phantom files, broken imports, and hallucinated links |
+| `python scripts/harness.py doc-dag` | `scripts/lint_doc_dag.py` | Validates documentation hierarchy, tiered DAG, and cross-references |
+| `python scripts/harness.py doctor` | `scripts/doctor.py` | Runs master self-diagnostics and applies automated repairs (`--fix`) |
+| `python scripts/harness.py clean` | `scripts/clean_workspace.py` | Reclaims space and cleans scratchpad, pycache, and temp build artifacts |
 | `python scripts/harness.py changelist` | `scripts/track_changelist.py` | Tracks, auto-detects diffs, and verifies changelist entries in `docs/CHANGELOG.md` |
-| `python scripts/harness.py bootstrap` | `scripts/bootstrap_project.py` | Bootstraps a fresh downstream project from this template |
+| `python scripts/harness.py bootstrap` | `scripts/bootstrap_project.py` | Bootstraps a fresh downstream project with architecture presets |
 

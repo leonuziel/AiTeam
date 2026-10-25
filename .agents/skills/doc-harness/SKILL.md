@@ -57,10 +57,31 @@ python scripts/harness.py scaffold --domain billing
 python scripts/harness.py scaffold --module auth
 ```
 
-### 5. Project Bootstrapping
+### 5. Diagnostics, Hygiene & Verification
 ```bash
-# Clean out template examples and re-brand for a new project
-python scripts/harness.py bootstrap --name "MyPaymentGateway"
+# Run comprehensive template self-diagnostics and auto-repair
+python scripts/harness.py doctor --fix
+
+# Reclaim space and clean compiler caches & scratchpad
+python scripts/harness.py clean
+
+# Scan for phantom files, broken imports, or hallucinated links
+python scripts/harness.py sentinel --strict
+
+# Validate documentation hierarchy and DAG cross-references
+python scripts/harness.py doc-dag --strict
+
+# Scan for exposed credentials or API keys
+python scripts/harness.py scan-secrets
+
+# Continuous turbo autopilot task advancement
+python scripts/harness.py next
+```
+
+### 6. Project Bootstrapping
+```bash
+# Clean out template examples and re-brand for a new project with architecture presets
+python scripts/harness.py bootstrap --name "MyPaymentGateway" --preset backend
 ```
 
 ## Agent Directives Checklist

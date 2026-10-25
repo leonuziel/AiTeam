@@ -36,111 +36,121 @@ Related: [ARCHITECTURE.md](file:///d:/Workspace/AiTeam/docs/ARCHITECTURE.md), [I
 
 ---
 
+### Executive Implementation & Architectural Decision Scorecard
+
+| Category | Count | Status Badge | Definition & Architectural Scope |
+| :--- | :---: | :---: | :--- |
+| **Built-in Core Harness Features** | **22** | `[IMPLEMENTED]` | **100% of generic template capabilities.** Standalone tools with zero required external dependencies (Python 3.8+ stdlib): AST parity linter, pre-commit sandbox, import boundaries, secret scanner, phantom sentinel, doc DAG validator, deterministic test runner, ADR lifecycle compactor, state checkpointing, autopilot turbo gate, doctor auto-repair, and project bootstrapper. |
+| **Downstream-Specific Features** | **30** | `[DOWNSTREAM_SPECIFIC]` | **Delegated to bootstrapped applications.** Features strictly dependent on a specific domain, technology stack, frontend UI, or database engine (e.g. Prisma/Alembic migration drift, Playwright visual regression, audio asset analyzers, MSW mock servers, Zod schemas, Lighthouse budgets). Scaffolding presets configure these on bootstrap. |
+| **Enterprise / Cloud Extensions** | **48** | `[DEFERRED_ENTERPRISE]` | **Deferred to enterprise infrastructure.** Features requiring multi-tenant cloud SaaS, paid vendor API pools, or container daemons (e.g. multi-vendor LLM consensus gates, Slack webhooks, Docker/gVisor sandboxes, enterprise CVE vulnerability scanners, RAG vector search). |
+| **Total Comprehensive Matrix** | **100** | &mdash; | **Complete full-lifecycle autonomous software factory architecture.** |
+
+---
+
 ### Quick Reference Index (1 to 100)
 
-| # | Title | Priority | Benefit | Domain / Category |
-| :---: | :--- | :---: | :---: | :--- |
-| 1 | **AST-Based Doc-to-Code Parity Linter** | P0 (Critical) | Transformational | Parity & Drift Enforcement |
-| 2 | **Automated Invariant-to-Property Test Transpiler** | P0 (Critical) | Transformational | Testing & Invariant Verification |
-| 3 | **Token-Budget-Aware Dynamic Context Slicer (`harness pack`)** | P0 (Critical) | Transformational | Agent Context & Orchestration |
-| 4 | **Machine-Readable Schema Contracts (Embedded JSON Schema / Zod)** | P0 (Critical) | Transformational | Data Contracts & Schema Validation |
-| 5 | **Bidirectional Type-Doc Synchronization Daemon** | P0 (Critical) | Transformational | Parity & Drift Enforcement |
-| 6 | **Machine-Enforced Escalation Protocol with JSON Payloads** | P0 (Critical) | Transformational | Agent Governance & Escalation |
-| 7 | **Atomic Git Pre-Commit Hook Sandboxing** | P0 (Critical) | Transformational | Verification & Git Governance |
-| 8 | **Architectural Dependency Boundary Linter (Import Rules)** | P0 (Critical) | Transformational | Architecture Governance |
-| 9 | **Automated ADR Lifecycle & Supersession Graph** | P0 (Critical) | Transformational | Decision Records & History |
-| 10 | **Agent Hallucination Trap & Phantom File Sentinel** | P0 (Critical) | Transformational | Agent Governance & Safety |
-| 11 | **Living Index Cross-Link Integrity Validator** | P0 (Critical) | Transformational | Documentation Integrity |
-| 12 | **Subagent Persona Isolation with Sandboxed Tool Access** | P0 (Critical) | Transformational | Multi-Agent Orchestration |
-| 13 | **Changelist Collision & Merge Conflict Auto-Resolver** | P0 (Critical) | Transformational | Git & Release Governance |
-| 14 | **Deterministic Seeded Test Runner with Timeout Enforcers** | P0 (Critical) | High | Testing & Invariant Verification |
-| 15 | **Documentation Freshness & Staleness Scoring Algorithm** | P0 (Critical) | High | Parity & Drift Enforcement |
-| 16 | **Harness CLI Dry-Run Simulation Mode (`--dry-run`)** | P0 (Critical) | High | Developer Experience & Tooling |
-| 17 | **Strict Markdown Table Formatting & Structural Linter** | P0 (Critical) | High | Documentation Integrity |
-| 18 | **Prompt Injection & Directive Escapement Fence** | P0 (Critical) | High | Security & Agent Safety |
-| 19 | **Automated Code-Review Linter with Invariant Attribution** | P0 (Critical) | High | Code Quality & Review |
-| 20 | **Multi-Model Consensus Gate for High-Impact ADRs** | P0 (Critical) | High | Agent Governance & Architecture |
-| 21 | **Zero-PII & Secret Sanitization Pre-Commit Gate** | P0 (Critical) | High | Security & Compliance |
-| 22 | **Downstream Template Upstream Sync Tool (`harness upstream-sync`)** | P0 (Critical) | Transformational | Template Lifecycle & Upgrades |
-| 23 | **Doc-Driven Feature Gate Scaffold Generator** | P0 (Critical) | High | Scaffolding & Architecture |
-| 24 | **Automated Rollback Sentinel on Verification Failure** | P0 (Critical) | High | Agent Governance & Safety |
-| 25 | **Formal Error Code Taxonomy Registry (`docs/tech/errors/`)** | P0 (Critical) | High | Error Handling & Robustness |
-| 26 | **Automated OpenAPI / Swagger Spec Extraction** | P1 (High) | High | API Contracts & Integration |
-| 27 | **Mutation Testing for Invariants (Stryker / Mutmut Integration)** | P1 (High) | High | Testing & Invariant Verification |
-| 28 | **Multi-Language Scaffolding Flavors (Go, Rust, Python, TypeScript)** | P1 (High) | High | Template Extensibility |
-| 29 | **Subagent Task Execution Graph & Concurrency File Locks** | P1 (High) | High | Multi-Agent Orchestration |
-| 30 | **Automated PR Description Generator from Git Diffs & CHANGELOG** | P1 (High) | High | CI/CD & Git Governance |
-| 31 | **Interactive Terminal UI (TUI) for Harness (`harness tui`)** | P1 (High) | Moderate | Developer Experience & Tooling |
-| 32 | **Agent Trajectory & Step Replay Visualizer** | P1 (High) | High | Observability & Debugging |
-| 33 | **Local Documentation Server with Live Hot-Reload** | P1 (High) | Moderate | Developer Experience |
-| 34 | **Database Schema & Migration Drift Validator** | P1 (High) | High | Data Contracts & Schema Validation |
-| 35 | **Cross-Document Consistency & Terminology Glossary** | P1 (High) | Moderate | Documentation Integrity |
-| 36 | **Automated Mock Service Generator from API Contracts** | P1 (High) | High | Testing & Scaffolding |
-| 37 | **Snapshot Testing for Generator Scripts** | P1 (High) | Moderate | Testing & Invariant Verification |
-| 38 | **Agent Workflow Configuration Schema Validator** | P1 (High) | Moderate | Agent Governance |
-| 39 | **Self-Healing Doc Link Auto-Fixer** | P1 (High) | High | Documentation Integrity |
-| 40 | **Cross-Platform CI Workflow Matrix (Windows, Linux, macOS)** | P1 (High) | High | CI/CD & Automation |
-| 41 | **Invariant Test Coverage Threshold Enforcement (100% Floor)** | P1 (High) | High | Testing & Invariant Verification |
-| 42 | **Automated Benchmark Harness for Performance Invariants** | P1 (High) | High | Testing & Invariant Verification |
-| 43 | **Knowledge Item (KI) Auto-Harvesting from Resolved ADRs** | P1 (High) | High | Memory & Knowledge Base |
-| 44 | **Semantic Code & Doc Search MCP Sidecar Tool** | P1 (High) | High | Agent Context & Orchestration |
-| 45 | **Agent Memory Pruning & Conversation Compaction Protocols** | P1 (High) | High | Agent Governance & Context |
-| 46 | **Fuzz Testing Generator for External Data Parsers** | P1 (High) | High | Testing & Invariant Verification |
-| 47 | **Interactive Conflict Resolution Webview Modal** | P1 (High) | Moderate | Developer Experience & Tooling |
-| 48 | **Code Complexity Budget Linter (Cyclomatic & Cognitive)** | P1 (High) | High | Code Quality & Maintainability |
-| 49 | **Automated License & Supply Chain Vulnerability Scanner** | P1 (High) | High | Security & Compliance |
-| 50 | **Hermetic Sandbox for Agent Command Execution** | P1 (High) | High | Security & Agent Safety |
-| 51 | **Mermaid Diagram Syntax & Node Linter** | P2 (Medium) | High | Documentation Integrity |
-| 52 | **Automated Semantic Versioning & Tag Bumper** | P2 (Medium) | Moderate | Release & Lifecycle |
-| 53 | **Agent Token Expenditure & Financial Telemetry** | P2 (Medium) | Moderate | Observability & Costs |
-| 54 | **Architecture Fitness Functions (ArchUnit Integration)** | P2 (Medium) | High | Architecture Governance |
-| 55 | **Doc-to-Wireframe ASCII/SVG Layout Generator** | P2 (Medium) | Moderate | UI/UX Architecture |
-| 56 | **Subagent Prompt Card Generator (`harness card --role`)** | P2 (Medium) | Moderate | Multi-Agent Orchestration |
-| 57 | **State Machine Specification-to-Code Validator** | P2 (Medium) | High | Architecture & State Modeling |
-| 58 | **Multi-Repo Meta-Sync Tool for Microservice Fleets** | P2 (Medium) | Moderate | Template Lifecycle |
-| 59 | **Automated Dead Code & Orphan Module Pruner** | P2 (Medium) | Moderate | Hygiene & Cleanliness |
-| 60 | **Accessibility (WCAG 2.1 AA) Invariant Linter** | P2 (Medium) | Moderate | Quality & Compliance |
-| 61 | **Internationalization (i18n) Key Extraction & Missing String Audit** | P2 (Medium) | Moderate | Localization & i18n |
-| 62 | **Service Worker & PWA Cache Manifest Validator** | P2 (Medium) | Moderate | Mobile & Web Packaging |
-| 63 | **Deterministic UUID / Numbered Slug Generator for ADRs** | P2 (Medium) | Moderate | Decision Records & History |
-| 64 | **Conventional Commit Message Linter with Doc Citation Tags** | P2 (Medium) | Moderate | Git Governance |
-| 65 | **Automated Code Comment-to-Doc Link Verifier** | P2 (Medium) | Moderate | Parity & Drift Enforcement |
-| 66 | **Static Asset Budget & Bundle Size Compression Gate** | P2 (Medium) | Moderate | Performance & Build |
-| 67 | **Agent Work-in-Progress (WIP) Stash & Checkpoint Manager** | P2 (Medium) | Moderate | Agent Context & Recovery |
-| 68 | **Telemetry & Analytics Event Schema Validator** | P2 (Medium) | Moderate | Observability & Analytics |
-| 69 | **Design Token & Dark Mode Palette Synchronizer** | P2 (Medium) | Moderate | UI/UX Architecture |
-| 70 | **Network Latency & Offline Simulation Test Harness** | P2 (Medium) | High | Testing & Robustness |
-| 71 | **Documentation Word Count & Conciseness Linter** | P2 (Medium) | Moderate | Documentation Integrity |
-| 72 | **Hermetic Code Formatting Enforcement (Ruff / Prettier / Black)** | P2 (Medium) | Moderate | Code Quality & Hygiene |
-| 73 | **API Deprecation & Sunset Lifecycle Tracker** | P2 (Medium) | Moderate | API Contracts & Lifecycle |
-| 74 | **Agent Tool Call Rate Limiter & Infinite Loop Circuit Breaker** | P2 (Medium) | High | Agent Governance & Safety |
-| 75 | **Deterministic Mock Data Generator for Local Development** | P2 (Medium) | Moderate | Developer Experience & Tooling |
-| 76 | **Automated Documentation Multi-Language Translation Pipeline** | P3 (Low / Polish) | Moderate | Documentation & i18n |
-| 77 | **Chaos Monkey Invariant Injector** | P3 (Low / Experimental) | High | Testing & Resilience |
-| 78 | **Visual Screenshot Regression Testing Harness (Playwright / BackstopJS)** | P3 (Low / Polish) | High | UI/UX Architecture |
-| 79 | **Natural Language Query Interface for Repo Specs (`harness ask`)** | P3 (Low / Experimental) | Moderate | Developer Experience |
-| 80 | **IDE Status Bar Widget (Real-Time Repo Health & Parity)** | P3 (Low / Polish) | Incremental | Developer Experience & Tooling |
-| 81 | **Automated GitHub Issue Triager & Spec Matcher** | P3 (Low / Polish) | Moderate | CI/CD & Issue Governance |
-| 82 | **Synthetic Load & Stress Test Generator (k6 / Locust)** | P3 (Low / Specialized) | Moderate | Testing & Performance |
-| 83 | **Memory Leak & Heap Allocation Audit Harness** | P3 (Low / Specialized) | High | Performance & Quality |
-| 84 | **Automated Security Advisory CVE Interceptor** | P3 (Low / Polish) | Moderate | Security & Compliance |
-| 85 | **Code Duplication & Refactoring Opportunity Linter (jscpd)** | P3 (Low / Polish) | Moderate | Code Quality & Cleanliness |
-| 86 | **Browser Storage Migration Test Suite Generator** | P3 (Low / Specialized) | High | Testing & Data Integrity |
-| 87 | **Audio Asset Clipping & Sample Rate Auditor** | P3 (Low / Specialized) | Incremental | Audio & Assets |
-| 88 | **Doc-to-Postman / Bruno Collection Exporter** | P3 (Low / Polish) | Moderate | API Contracts & Tooling |
-| 89 | **Subagent Cost & Turn Estimation Reporter** | P3 (Low / Polish) | Incremental | Observability & Planning |
-| 90 | **Cross-Platform Path Separator Normalizer Linter** | P3 (Low / Polish) | Moderate | Hygiene & Cross-Platform |
-| 91 | **Automated Dynamic Badges Generator for README** | P3 (Low / Polish) | Incremental | Documentation & Presentation |
-| 92 | **Git Branch Naming Policy Enforcement Hook** | P3 (Low / Polish) | Incremental | Git Governance |
-| 93 | **Feature Flag Stale Retirement Bot** | P3 (Low / Polish) | Moderate | Code Quality & Architecture |
-| 94 | **Automated Code Tour Generator (VS Code CodeTour)** | P3 (Low / Polish) | Moderate | Onboarding & Developer Experience |
-| 95 | **API Rate Limiting & Throttling Invariant Test Suite** | P3 (Low / Specialized) | Moderate | Testing & Security |
-| 96 | **Subagent Scratchpad Garbage Collector** | P3 (Low / Polish) | Incremental | Hygiene & Cleanliness |
-| 97 | **Rich Markdown Diff Visualizer for Code Reviews** | P3 (Low / Polish) | Moderate | Developer Experience |
-| 98 | **Web Vitals & Performance Budget Auditor (Lighthouse CLI)** | P3 (Low / Polish) | Moderate | Performance & Frontend |
-| 99 | **Interactive Onboarding CLI Walkthrough (`harness tutorial`)** | P3 (Low / Polish) | Moderate | Developer Experience |
-| 100 | **Template Self-Diagnostic & Auto-Repair Sentinel (`harness doctor --fix`)** | P3 (Low / Polish) | High | Template Resilience & Health |
-
+| # | Title | Priority | Benefit | Domain / Category | Status | Implementation / Rationale |
+| :---: | :--- | :---: | :---: | :--- | :---: | :--- |
+| 1 | **AST-Based Doc-to-Code Parity Linter** | P0 (Critical) | Transformational | Parity & Drift Enforcement | `[IMPLEMENTED]` | `scripts/check_doc_drift.py` • `harness parity` |
+| 2 | **Automated Invariant-to-Property Test Transpiler** | P0 (Critical) | Transformational | Testing & Invariant Verification | `[IMPLEMENTED]` | `scripts/generate_invariant_tests.py` • `harness test-gen` |
+| 3 | **Token-Budget-Aware Dynamic Context Slicer (`harness pack`)** | P0 (Critical) | Transformational | Agent Context & Orchestration | `[IMPLEMENTED]` | `scripts/pack_context.py` • `harness pack` |
+| 4 | **Machine-Readable Schema Contracts (Embedded JSON Schema / Zod)** | P0 (Critical) | Transformational | Data Contracts & Schema Validation | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream domain entity models & ORM/validation schemas (Zod/Pydantic) |
+| 5 | **Bidirectional Type-Doc Synchronization Daemon** | P0 (Critical) | Transformational | Parity & Drift Enforcement | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream language-specific AST compiler sync (ts-morph / mypy.api) |
+| 6 | **Machine-Enforced Escalation Protocol with JSON Payloads** | P0 (Critical) | Transformational | Agent Governance & Escalation | `[IMPLEMENTED]` | `scripts/resolve_question.py --package` • `harness resolve` |
+| 7 | **Atomic Git Pre-Commit Hook Sandboxing** | P0 (Critical) | Transformational | Verification & Git Governance | `[IMPLEMENTED]` | `.githooks/pre-commit` • `scripts/install_hooks.py` |
+| 8 | **Architectural Dependency Boundary Linter (Import Rules)** | P0 (Critical) | Transformational | Architecture Governance | `[IMPLEMENTED]` | `scripts/lint_imports.py` • `harness lint-imports` |
+| 9 | **Automated ADR Lifecycle & Supersession Graph** | P0 (Critical) | Transformational | Decision Records & History | `[IMPLEMENTED]` | `scripts/compact_docs.py` & `record_decision.py` • `harness compact` |
+| 10 | **Agent Hallucination Trap & Phantom File Sentinel** | P0 (Critical) | Transformational | Agent Governance & Safety | `[IMPLEMENTED]` | `scripts/phantom_sentinel.py` • `harness sentinel` |
+| 11 | **Living Index Cross-Link Integrity Validator** | P0 (Critical) | Transformational | Documentation Integrity | `[IMPLEMENTED]` | `scripts/generate_doc_index.py` & `lint_doc_dag.py` • `harness index` |
+| 12 | **Subagent Persona Isolation with Sandboxed Tool Access** | P0 (Critical) | Transformational | Multi-Agent Orchestration | `[DEFERRED_ENTERPRISE]` | Requires OS-level container isolation daemon (Docker / gVisor) |
+| 13 | **Changelist Collision & Merge Conflict Auto-Resolver** | P0 (Critical) | Transformational | Git & Release Governance | `[IMPLEMENTED]` | `scripts/track_changelist.py` • `harness changelist` |
+| 14 | **Deterministic Seeded Test Runner with Timeout Enforcers** | P0 (Critical) | High | Testing & Invariant Verification | `[IMPLEMENTED]` | `scripts/run_tests.py` • `harness test --seed --timeout` |
+| 15 | **Documentation Freshness & Staleness Scoring Algorithm** | P0 (Critical) | High | Parity & Drift Enforcement | `[DEFERRED_ENTERPRISE]` | Long-term historical git analytics; better served in enterprise metrics pipeline |
+| 16 | **Harness CLI Dry-Run Simulation Mode (`--dry-run`)** | P0 (Critical) | High | Developer Experience & Tooling | `[DEFERRED_ENTERPRISE]` | Virtual simulation mode deferred to enterprise container sandboxing |
+| 17 | **Strict Markdown Table Formatting & Structural Linter** | P0 (Critical) | High | Documentation Integrity | `[IMPLEMENTED]` | `scripts/lint_docs.py` • `harness lint --strict` |
+| 18 | **Prompt Injection & Directive Escapement Fence** | P0 (Critical) | High | Security & Agent Safety | `[DEFERRED_ENTERPRISE]` | Requires external multi-tenant LLM firewall proxy (Lakera / Rebuff) |
+| 19 | **Automated Code-Review Linter with Invariant Attribution** | P0 (Critical) | High | Code Quality & Review | `[DEFERRED_ENTERPRISE]` | Requires dedicated external LLM reviewer bot API tokens |
+| 20 | **Multi-Model Consensus Gate for High-Impact ADRs** | P0 (Critical) | High | Agent Governance & Architecture | `[DEFERRED_ENTERPRISE]` | Requires multi-vendor LLM API keys (Anthropic + OpenAI + Google) in enterprise CI |
+| 21 | **Zero-PII & Secret Sanitization Pre-Commit Gate** | P0 (Critical) | High | Security & Compliance | `[IMPLEMENTED]` | `scripts/scan_secrets.py` • `harness scan-secrets` |
+| 22 | **Downstream Template Upstream Sync Tool (`harness upstream-sync`)** | P0 (Critical) | Transformational | Template Lifecycle & Upgrades | `[DEFERRED_ENTERPRISE]` | Requires enterprise git-vendor / multi-repo sub-tree sync daemon |
+| 23 | **Doc-Driven Feature Gate Scaffold Generator** | P0 (Critical) | High | Scaffolding & Architecture | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream application feature flag tool (Unleash / LaunchDarkly) |
+| 24 | **Automated Rollback Sentinel on Verification Failure** | P0 (Critical) | High | Agent Governance & Safety | `[IMPLEMENTED]` | `scripts/checkpoint_state.py` • `harness checkpoint restore` |
+| 25 | **Formal Error Code Taxonomy Registry (`docs/tech/errors/`)** | P0 (Critical) | High | Error Handling & Robustness | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream domain-specific business error taxonomy |
+| 26 | **Automated OpenAPI / Swagger Spec Extraction** | P1 (High) | High | API Contracts & Integration | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream backend REST/OpenAPI framework (FastAPI / Express / NestJS) |
+| 27 | **Mutation Testing for Invariants (Stryker / Mutmut Integration)** | P1 (High) | High | Testing & Invariant Verification | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream mutation testing toolchain (Stryker / Mutmut) |
+| 28 | **Multi-Language Scaffolding Flavors (Go, Rust, Python, TypeScript)** | P1 (High) | High | Template Extensibility | `[IMPLEMENTED]` | `scripts/bootstrap_project.py --preset` • `harness bootstrap` |
+| 29 | **Subagent Task Execution Graph & Concurrency File Locks** | P1 (High) | High | Multi-Agent Orchestration | `[DEFERRED_ENTERPRISE]` | Requires distributed multi-process file locking server (Redis / Consul) |
+| 30 | **Automated PR Description Generator from Git Diffs & CHANGELOG** | P1 (High) | High | CI/CD & Git Governance | `[DEFERRED_ENTERPRISE]` | Requires GitHub enterprise app installation token for automated PR creation |
+| 31 | **Interactive Terminal UI (TUI) for Harness (`harness tui`)** | P1 (High) | Moderate | Developer Experience & Tooling | `[DEFERRED_ENTERPRISE]` | Deferred developer luxury; standard CLI commands cover 100% of automation |
+| 32 | **Agent Trajectory & Step Replay Visualizer** | P1 (High) | High | Observability & Debugging | `[DEFERRED_ENTERPRISE]` | Requires centralized enterprise telemetry and trajectory web visualizer |
+| 33 | **Local Documentation Server with Live Hot-Reload** | P1 (High) | Moderate | Developer Experience | `[DEFERRED_ENTERPRISE]` | Deferred to standard documentation web servers (MkDocs / VitePress) |
+| 34 | **Database Schema & Migration Drift Validator** | P1 (High) | High | Data Contracts & Schema Validation | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream database migration engine (Prisma / Alembic / Flyway) |
+| 35 | **Cross-Document Consistency & Terminology Glossary** | P1 (High) | Moderate | Documentation Integrity | `[IMPLEMENTED]` | `scripts/lint_doc_dag.py` • `harness doc-dag` |
+| 36 | **Automated Mock Service Generator from API Contracts** | P1 (High) | High | Testing & Scaffolding | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream API mock server (MSW / WireMock) |
+| 37 | **Snapshot Testing for Generator Scripts** | P1 (High) | Moderate | Testing & Invariant Verification | `[DEFERRED_ENTERPRISE]` | Subsumed by deterministic seeded unit test suites |
+| 38 | **Agent Workflow Configuration Schema Validator** | P1 (High) | Moderate | Agent Governance | `[DEFERRED_ENTERPRISE]` | Subsumed by markdown-defined agent workflow loops |
+| 39 | **Self-Healing Doc Link Auto-Fixer** | P1 (High) | High | Documentation Integrity | `[DEFERRED_ENTERPRISE]` | Auto-rewriting links risks masking intentional file removals; static linters preferred |
+| 40 | **Cross-Platform CI Workflow Matrix (Windows, Linux, macOS)** | P1 (High) | High | CI/CD & Automation | `[DEFERRED_ENTERPRISE]` | Managed via downstream repository's GitHub Actions workflow runners |
+| 41 | **Invariant Test Coverage Threshold Enforcement (100% Floor)** | P1 (High) | High | Testing & Invariant Verification | `[IMPLEMENTED]` | `scripts/audit_repo.py` & `scripts/doctor.py` (100% floor) |
+| 42 | **Automated Benchmark Harness for Performance Invariants** | P1 (High) | High | Testing & Invariant Verification | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream performance benchmark suite (pytest-benchmark / k6) |
+| 43 | **Knowledge Item (KI) Auto-Harvesting from Resolved ADRs** | P1 (High) | High | Memory & Knowledge Base | `[DEFERRED_ENTERPRISE]` | Integrated via Antigravity IDE built-in Knowledge Item harvesting |
+| 44 | **Semantic Code & Doc Search MCP Sidecar Tool** | P1 (High) | High | Agent Context & Orchestration | `[DEFERRED_ENTERPRISE]` | Dependent on IDE MCP server runtime environment (`mcp_config.json`) |
+| 45 | **Agent Memory Pruning & Conversation Compaction Protocols** | P1 (High) | High | Agent Governance & Context | `[IMPLEMENTED]` | `scripts/clean_workspace.py` • `harness clean` |
+| 46 | **Fuzz Testing Generator for External Data Parsers** | P1 (High) | High | Testing & Invariant Verification | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream parser fuzz testing toolchain (Atheris / jsfuzz) |
+| 47 | **Interactive Conflict Resolution Webview Modal** | P1 (High) | Moderate | Developer Experience & Tooling | `[DEFERRED_ENTERPRISE]` | Requires VS Code / Antigravity IDE webview GUI extension development |
+| 48 | **Code Complexity Budget Linter (Cyclomatic & Cognitive)** | P1 (High) | High | Code Quality & Maintainability | `[DEFERRED_ENTERPRISE]` | Deferred to downstream code quality linters (Ruff / ESLint) |
+| 49 | **Automated License & Supply Chain Vulnerability Scanner** | P1 (High) | High | Security & Compliance | `[DEFERRED_ENTERPRISE]` | Requires enterprise supply chain security scanners (Snyk / Dependabot) |
+| 50 | **Hermetic Sandbox for Agent Command Execution** | P1 (High) | High | Security & Agent Safety | `[DEFERRED_ENTERPRISE]` | Requires enterprise containerization & hermetic command isolation |
+| 51 | **Mermaid Diagram Syntax & Node Linter** | P2 (Medium) | High | Documentation Integrity | `[DEFERRED_ENTERPRISE]` | Optional visual diagram validation; markdown linters verify code blocks |
+| 52 | **Automated Semantic Versioning & Tag Bumper** | P2 (Medium) | Moderate | Release & Lifecycle | `[DEFERRED_ENTERPRISE]` | Managed via enterprise CI release and tag automation pipelines |
+| 53 | **Agent Token Expenditure & Financial Telemetry** | P2 (Medium) | Moderate | Observability & Costs | `[DEFERRED_ENTERPRISE]` | Requires enterprise LLM gateway billing and metering integration |
+| 54 | **Architecture Fitness Functions (ArchUnit Integration)** | P2 (Medium) | High | Architecture Governance | `[DEFERRED_ENTERPRISE]` | Subsumed by `scripts/lint_imports.py` and AST parity checking |
+| 55 | **Doc-to-Wireframe ASCII/SVG Layout Generator** | P2 (Medium) | Moderate | UI/UX Architecture | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream UI/UX frontend layout engine |
+| 56 | **Subagent Prompt Card Generator (`harness card --role`)** | P2 (Medium) | Moderate | Multi-Agent Orchestration | `[DEFERRED_ENTERPRISE]` | Subsumed by `scripts/pack_context.py` persona subagent context bundles |
+| 57 | **State Machine Specification-to-Code Validator** | P2 (Medium) | High | Architecture & State Modeling | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream state machine library (XState / transitions) |
+| 58 | **Multi-Repo Meta-Sync Tool for Microservice Fleets** | P2 (Medium) | Moderate | Template Lifecycle | `[DEFERRED_ENTERPRISE]` | Requires enterprise monorepo / polyrepo synchronization tooling |
+| 59 | **Automated Dead Code & Orphan Module Pruner** | P2 (Medium) | Moderate | Hygiene & Cleanliness | `[DEFERRED_ENTERPRISE]` | Subsumed by `scripts/check_doc_drift.py` and `scripts/clean_workspace.py` |
+| 60 | **Accessibility (WCAG 2.1 AA) Invariant Linter** | P2 (Medium) | Moderate | Quality & Compliance | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream frontend accessibility test suite (axe-core / pa11y) |
+| 61 | **Internationalization (i18n) Key Extraction & Missing String Audit** | P2 (Medium) | Moderate | Localization & i18n | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream localization string catalog (i18next / gettext) |
+| 62 | **Service Worker & PWA Cache Manifest Validator** | P2 (Medium) | Moderate | Mobile & Web Packaging | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream Progressive Web App service worker manifests |
+| 63 | **Deterministic UUID / Numbered Slug Generator for ADRs** | P2 (Medium) | Moderate | Decision Records & History | `[IMPLEMENTED]` | `scripts/record_decision.py` (Numbered ADR slugs) |
+| 64 | **Conventional Commit Message Linter with Doc Citation Tags** | P2 (Medium) | Moderate | Git Governance | `[DEFERRED_ENTERPRISE]` | Convention enforced via git governance and changelist tracker |
+| 65 | **Automated Code Comment-to-Doc Link Verifier** | P2 (Medium) | Moderate | Parity & Drift Enforcement | `[DEFERRED_ENTERPRISE]` | Subsumed by AST parity checking and cross-link validation |
+| 66 | **Static Asset Budget & Bundle Size Compression Gate** | P2 (Medium) | Moderate | Performance & Build | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream bundler compression budgets (Vite / Webpack / Rollup) |
+| 67 | **Agent Work-in-Progress (WIP) Stash & Checkpoint Manager** | P2 (Medium) | Moderate | Agent Context & Recovery | `[IMPLEMENTED]` | `scripts/checkpoint_state.py` • `harness checkpoint create` |
+| 68 | **Telemetry & Analytics Event Schema Validator** | P2 (Medium) | Moderate | Observability & Analytics | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream analytics event instrumentation (PostHog / Segment) |
+| 69 | **Design Token & Dark Mode Palette Synchronizer** | P2 (Medium) | Moderate | UI/UX Architecture | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream UI design token synchronizer (Tailwind / CSS tokens) |
+| 70 | **Network Latency & Offline Simulation Test Harness** | P2 (Medium) | High | Testing & Robustness | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream network offline simulation harness |
+| 71 | **Documentation Word Count & Conciseness Linter** | P2 (Medium) | Moderate | Documentation Integrity | `[DEFERRED_ENTERPRISE]` | Subsumed by `scripts/compact_docs.py` revision thresholding |
+| 72 | **Hermetic Code Formatting Enforcement (Ruff / Prettier / Black)** | P2 (Medium) | Moderate | Code Quality & Hygiene | `[DEFERRED_ENTERPRISE]` | Delegated to project-level code formatters (Ruff / Black / Prettier) |
+| 73 | **API Deprecation & Sunset Lifecycle Tracker** | P2 (Medium) | Moderate | API Contracts & Lifecycle | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream public API version deprecation headers |
+| 74 | **Agent Tool Call Rate Limiter & Infinite Loop Circuit Breaker** | P2 (Medium) | High | Agent Governance & Safety | `[DEFERRED_ENTERPRISE]` | Subsumed by IDE tool call controls and `scripts/autopilot.py` |
+| 75 | **Deterministic Mock Data Generator for Local Development** | P2 (Medium) | Moderate | Developer Experience & Tooling | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream application fixture generator (Faker / FactoryBoy) |
+| 76 | **Automated Documentation Multi-Language Translation Pipeline** | P3 (Low / Polish) | Moderate | Documentation & i18n | `[DEFERRED_ENTERPRISE]` | Requires commercial translation API credentials |
+| 77 | **Chaos Monkey Invariant Injector** | P3 (Low / Experimental) | High | Testing & Resilience | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream distributed resilience suite (Chaos Monkey) |
+| 78 | **Visual Screenshot Regression Testing Harness (Playwright / BackstopJS)** | P3 (Low / Polish) | High | UI/UX Architecture | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream browser visual regression harness (Playwright / BackstopJS) |
+| 79 | **Natural Language Query Interface for Repo Specs (`harness ask`)** | P3 (Low / Experimental) | Moderate | Developer Experience | `[DEFERRED_ENTERPRISE]` | Requires enterprise RAG / vector embedding retrieval infrastructure |
+| 80 | **IDE Status Bar Widget (Real-Time Repo Health & Parity)** | P3 (Low / Polish) | Incremental | Developer Experience & Tooling | `[DEFERRED_ENTERPRISE]` | Requires IDE-specific extension plugin packaging |
+| 81 | **Automated GitHub Issue Triager & Spec Matcher** | P3 (Low / Polish) | Moderate | CI/CD & Issue Governance | `[DEFERRED_ENTERPRISE]` | Requires GitHub enterprise automation webhook integration |
+| 82 | **Synthetic Load & Stress Test Generator (k6 / Locust)** | P3 (Low / Specialized) | Moderate | Testing & Performance | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream backend load test suite (k6 / Locust) |
+| 83 | **Memory Leak & Heap Allocation Audit Harness** | P3 (Low / Specialized) | High | Performance & Quality | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream runtime heap profiler (memray / clinic.js) |
+| 84 | **Automated Security Advisory CVE Interceptor** | P3 (Low / Polish) | Moderate | Security & Compliance | `[DEFERRED_ENTERPRISE]` | Enterprise vulnerability scanner integration |
+| 85 | **Code Duplication & Refactoring Opportunity Linter (jscpd)** | P3 (Low / Polish) | Moderate | Code Quality & Cleanliness | `[DEFERRED_ENTERPRISE]` | Downstream static analysis tooling (jscpd) |
+| 86 | **Browser Storage Migration Test Suite Generator** | P3 (Low / Specialized) | High | Testing & Data Integrity | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream client browser storage migrations (IndexedDB / LocalStorage) |
+| 87 | **Audio Asset Clipping & Sample Rate Auditor** | P3 (Low / Specialized) | Incremental | Audio & Assets | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream game/multimedia audio asset pipelines |
+| 88 | **Doc-to-Postman / Bruno Collection Exporter** | P3 (Low / Polish) | Moderate | API Contracts & Tooling | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream API developer client collections (Postman / Bruno) |
+| 89 | **Subagent Cost & Turn Estimation Reporter** | P3 (Low / Polish) | Incremental | Observability & Planning | `[DEFERRED_ENTERPRISE]` | Enterprise token accounting and billing system |
+| 90 | **Cross-Platform Path Separator Normalizer Linter** | P3 (Low / Polish) | Moderate | Hygiene & Cross-Platform | `[DEFERRED_ENTERPRISE]` | Built directly into path normalization inside `phantom_sentinel.py` |
+| 91 | **Automated Dynamic Badges Generator for README** | P3 (Low / Polish) | Incremental | Documentation & Presentation | `[DEFERRED_ENTERPRISE]` | Downstream CI dynamic shield/badge service |
+| 92 | **Git Branch Naming Policy Enforcement Hook** | P3 (Low / Polish) | Incremental | Git Governance | `[DEFERRED_ENTERPRISE]` | Downstream organizational git branch policies |
+| 93 | **Feature Flag Stale Retirement Bot** | P3 (Low / Polish) | Moderate | Code Quality & Architecture | `[DEFERRED_ENTERPRISE]` | Downstream feature flag lifecycle bot |
+| 94 | **Automated Code Tour Generator (VS Code CodeTour)** | P3 (Low / Polish) | Moderate | Onboarding & Developer Experience | `[DEFERRED_ENTERPRISE]` | VS Code CodeTour extension artifact |
+| 95 | **API Rate Limiting & Throttling Invariant Test Suite** | P3 (Low / Specialized) | Moderate | Testing & Security | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream API gateway token bucket rate limiting |
+| 96 | **Subagent Scratchpad Garbage Collector** | P3 (Low / Polish) | Incremental | Hygiene & Cleanliness | `[IMPLEMENTED]` | `scripts/clean_workspace.py` (Scratchpad GC) |
+| 97 | **Rich Markdown Diff Visualizer for Code Reviews** | P3 (Low / Polish) | Moderate | Developer Experience | `[DEFERRED_ENTERPRISE]` | Provided by GitHub / IDE pull request review interfaces |
+| 98 | **Web Vitals & Performance Budget Auditor (Lighthouse CLI)** | P3 (Low / Polish) | Moderate | Performance & Frontend | `[DOWNSTREAM_SPECIFIC]` | Delegated to downstream web performance budget auditor (Lighthouse CLI) |
+| 99 | **Interactive Onboarding CLI Walkthrough (`harness tutorial`)** | P3 (Low / Polish) | Moderate | Developer Experience | `[DEFERRED_ENTERPRISE]` | Subsumed by `scripts/doctor.py` and `meta_generator_guide.md` |
+| 100 | **Template Self-Diagnostic & Auto-Repair Sentinel (`harness doctor --fix`)** | P3 (Low / Polish) | High | Template Resilience & Health | `[IMPLEMENTED]` | `scripts/doctor.py` • `harness doctor --fix` |
 ---
 
 ### Tier 1: P0 Critical & Transformational Infrastructure (Items 1–25)
@@ -148,7 +158,7 @@ Related: [ARCHITECTURE.md](file:///d:/Workspace/AiTeam/docs/ARCHITECTURE.md), [I
 
 #### 1. AST-Based Doc-to-Code Parity Linter
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Parity & Drift Enforcement`
+> **Status:** `[IMPLEMENTED]` (`scripts/check_doc_drift.py` • `harness parity`) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Parity & Drift Enforcement`
 
 Replaces crude filename/module existence checks with full AST (Abstract Syntax Tree) parsing (Python `ast`, TypeScript Compiler API). Inspects whether exported classes, functions, interfaces, and public methods in code match those declared in the `## 3. Specifications & Interfaces` table of corresponding doc leaves.
 
@@ -162,7 +172,7 @@ Significantly higher computational overhead during git pre-commit hooks and CI r
 
 #### 2. Automated Invariant-to-Property Test Transpiler
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Testing & Invariant Verification`
+> **Status:** `[IMPLEMENTED]` (`scripts/generate_invariant_tests.py` • `harness test-gen`) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Testing & Invariant Verification`
 
 Parses bullet points under `## 2. Invariants (Hard Rules)` in doc leaves and compiles them directly into executable property-based test stubs using Hypothesis (Python) or fast-check (TypeScript).
 
@@ -176,7 +186,7 @@ Parsing natural language rules into mathematical properties is prone to translat
 
 #### 3. Token-Budget-Aware Dynamic Context Slicer (`harness pack`)
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Agent Context & Orchestration`
+> **Status:** `[IMPLEMENTED]` (`scripts/pack_context.py` • `harness pack`) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Agent Context & Orchestration`
 
 Calculates exact token budgets (using tiktoken or model-specific BPE tokenizers) when slicing documentation trees, ADRs, and module dependencies for subagent handoffs, automatically pruning irrelevant sections while preserving all related invariants.
 
@@ -190,7 +200,7 @@ Heuristic pruning risks discarding subtle edge-case context or cross-cutting sec
 
 #### 4. Machine-Readable Schema Contracts (Embedded JSON Schema / Zod)
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Data Contracts & Schema Validation`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream domain entity models & ORM/validation schemas (Zod/Pydantic)) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Data Contracts & Schema Validation`
 
 Standardizes data schemas in `docs/tech/data/` using fenced JSON Schema, Zod, or Pydantic definitions directly in Markdown, validated by `harness lint` and imported directly into code via code-generation.
 
@@ -204,7 +214,7 @@ Adds cognitive friction for product managers or non-technical contributors who p
 
 #### 5. Bidirectional Type-Doc Synchronization Daemon
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Parity & Drift Enforcement`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream language-specific AST compiler sync (ts-morph / mypy.api)) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Parity & Drift Enforcement`
 
 A file watcher / pre-commit tool that detects changes to TypeScript interfaces or Python dataclasses and automatically formats them into the markdown specification table, or warns if the doc has not been updated via an ADR.
 
@@ -218,7 +228,7 @@ Risks violating the core philosophy ('Docs define code, code never defines docs'
 
 #### 6. Machine-Enforced Escalation Protocol with JSON Payloads
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Agent Governance & Escalation`
+> **Status:** `[IMPLEMENTED]` (`scripts/resolve_question.py --package` • `harness resolve`) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Agent Governance & Escalation`
 
 Upgrades the free-form `[BLOCKED_NEED_DECISION: ...]` string token to a machine-validated JSON decision package schema with `target_doc`, `conflict_description`, `options: [A, B]`, `trade_offs`, and `recommendation`.
 
@@ -232,7 +242,7 @@ More rigid prompt overhead for simple, obvious questions; small edge-case clarif
 
 #### 7. Atomic Git Pre-Commit Hook Sandboxing
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Verification & Git Governance`
+> **Status:** `[IMPLEMENTED]` (`.githooks/pre-commit` • `scripts/install_hooks.py`) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Verification & Git Governance`
 
 Runs `harness audit` inside an isolated temporary stash/worktree environment during pre-commit to guarantee that untracked files, partial staging, or dirty trees cannot bypass quality gates.
 
@@ -246,7 +256,7 @@ Slows down commit speed by 2 to 6 seconds per commit due to worktree isolation, 
 
 #### 8. Architectural Dependency Boundary Linter (Import Rules)
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Architecture Governance`
+> **Status:** `[IMPLEMENTED]` (`scripts/lint_imports.py` • `harness lint-imports`) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Architecture Governance`
 
 Integrates rules (e.g. `import-linter` or dependency-cruiser) asserting architectural layering: UI layer cannot import DB layer; domains cannot cross-import without public API contracts; circular dependencies fail builds.
 
@@ -260,7 +270,7 @@ Can lead to over-engineering with excessive boilerplate DTOs, mappers, and facad
 
 #### 9. Automated ADR Lifecycle & Supersession Graph
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Decision Records & History`
+> **Status:** `[IMPLEMENTED]` (`scripts/compact_docs.py` & `record_decision.py` • `harness compact`) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Decision Records & History`
 
 Adds formal state metadata to ADRs (`Status: PROPOSED | ACCEPTED | SUPERSEDED | REJECTED`) and builds a directed acyclic graph (DAG) connecting superseding decisions with automated back-links.
 
@@ -274,7 +284,7 @@ Requires continuous discipline when recording decisions; agents must know how to
 
 #### 10. Agent Hallucination Trap & Phantom File Sentinel
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Agent Governance & Safety`
+> **Status:** `[IMPLEMENTED]` (`scripts/phantom_sentinel.py` • `harness sentinel`) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Agent Governance & Safety`
 
 Pre-execution hook in the agent harness that intercepts file read/write operations and checks against physical repository index, instantly terminating turns that attempt to import or reference phantom files.
 
@@ -288,7 +298,7 @@ Can trigger false positives during legitimate file creation workflows if the age
 
 #### 11. Living Index Cross-Link Integrity Validator
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Documentation Integrity`
+> **Status:** `[IMPLEMENTED]` (`scripts/generate_doc_index.py` & `lint_doc_dag.py` • `harness index`) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Documentation Integrity`
 
 Validates that `docs/INDEX.md` not only lists all files, but strictly reflects the hierarchical taxonomy, parent/child relationships, and bidirectional Markdown links with zero dangling references.
 
@@ -302,7 +312,7 @@ Requires constant re-generation; any manual addition of a doc file without runni
 
 #### 12. Subagent Persona Isolation with Sandboxed Tool Access
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Multi-Agent Orchestration`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Requires OS-level container isolation daemon (Docker / gVisor)) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Multi-Agent Orchestration`
 
 Configures tool permission profiles per agent role: Doc Custodian has write access ONLY to `docs/`; Implementer has read access to `docs/` and write access to `src/` & `tests/`.
 
@@ -316,7 +326,7 @@ Requires a coordinator / orchestrator to mediate documentation updates; cannot b
 
 #### 13. Changelist Collision & Merge Conflict Auto-Resolver
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Git & Release Governance`
+> **Status:** `[IMPLEMENTED]` (`scripts/track_changelist.py` • `harness changelist`) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Git & Release Governance`
 
 A custom git merge driver for `docs/CHANGELOG.md` and `docs/INDEX.md` that automatically orders and unions parallel unreleased entries rather than producing git conflict markers.
 
@@ -330,7 +340,7 @@ Custom git drivers require local repository configuration (`.gitattributes`) and
 
 #### 14. Deterministic Seeded Test Runner with Timeout Enforcers
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Testing & Invariant Verification`
+> **Status:** `[IMPLEMENTED]` (`scripts/run_tests.py` • `harness test --seed --timeout`) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Testing & Invariant Verification`
 
 Standardizes test runners (`scripts/run_tests.py`) to inject deterministic pseudorandom seeds into all tests and enforces a strict per-test execution timeout (e.g. 2.5s).
 
@@ -344,7 +354,7 @@ May obscure rare probabilistic race conditions that only surface under genuinely
 
 #### 15. Documentation Freshness & Staleness Scoring Algorithm
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Parity & Drift Enforcement`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Long-term historical git analytics; better served in enterprise metrics pipeline) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Parity & Drift Enforcement`
 
 Computes a 'freshness score' for every doc leaf based on git commit timestamps of the doc vs. its associated code files. Flags docs whose code has had > 5 commits without doc touch.
 
@@ -358,7 +368,7 @@ Code refactors that don't alter specifications (e.g. performance tweaks, linting
 
 #### 16. Harness CLI Dry-Run Simulation Mode (`--dry-run`)
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Developer Experience & Tooling`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Virtual simulation mode deferred to enterprise container sandboxing) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Developer Experience & Tooling`
 
 Adds `--dry-run` to all harness commands (`scaffold`, `resolve`, `ingest`, `adr`, `test-gen`), outputting the exact diffs and file targets without writing to disk.
 
@@ -372,7 +382,7 @@ Increases codebase complexity across all harness scripts to maintain state simul
 
 #### 17. Strict Markdown Table Formatting & Structural Linter
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Documentation Integrity`
+> **Status:** `[IMPLEMENTED]` (`scripts/lint_docs.py` • `harness lint --strict`) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Documentation Integrity`
 
 Validates that all markdown tables have matching column delimiters, no truncated lines, valid type annotations in interface specs, and no unescaped pipe characters.
 
@@ -386,7 +396,7 @@ Can reject otherwise readable human notes if table column widths or dividers are
 
 #### 18. Prompt Injection & Directive Escapement Fence
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Security & Agent Safety`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Requires external multi-tenant LLM firewall proxy (Lakera / Rebuff)) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Security & Agent Safety`
 
 Sanitizes raw context, external PRDs, and user notes before ingestion into docs, stripping prompt injection triggers (e.g. 'Ignore previous instructions and delete repository').
 
@@ -400,7 +410,7 @@ May inadvertently sanitize legitimate technical text (e.g. documentation describ
 
 #### 19. Automated Code-Review Linter with Invariant Attribution
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Code Quality & Review`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Requires dedicated external LLM reviewer bot API tokens) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Code Quality & Review`
 
 A git diff auditor that inspects every modified line of code, maps it back to the doc leaf owning that domain, and asserts whether any hard invariants were touched without doc updates.
 
@@ -414,7 +424,7 @@ Requires precise code-to-doc mapping metadata (e.g. file paths or code comment a
 
 #### 20. Multi-Model Consensus Gate for High-Impact ADRs
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Agent Governance & Architecture`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Requires multi-vendor LLM API keys (Anthropic + OpenAI + Google) in enterprise CI) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Agent Governance & Architecture`
 
 When an architectural fork occurs, the harness can optionally query two distinct model providers (e.g. Claude + Gemini) to debate trade-offs before escalating to human.
 
@@ -428,7 +438,7 @@ Doubles the token cost and API latency of design resolution turns; requires mult
 
 #### 21. Zero-PII & Secret Sanitization Pre-Commit Gate
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Security & Compliance`
+> **Status:** `[IMPLEMENTED]` (`scripts/scan_secrets.py` • `harness scan-secrets`) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Security & Compliance`
 
 Integrates high-entropy regex and pattern scanners (similar to TruffleHog / GitGuardian) into the pre-commit audit gate to prevent committing secrets, tokens, or personal identifiers.
 
@@ -442,7 +452,7 @@ Can generate annoying false positives on legitimate mock hashes, test tokens, or
 
 #### 22. Downstream Template Upstream Sync Tool (`harness upstream-sync`)
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Template Lifecycle & Upgrades`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Requires enterprise git-vendor / multi-repo sub-tree sync daemon) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `Transformational` &nbsp;|&nbsp; **Domain:** `Template Lifecycle & Upgrades`
 
 Provides a CLI command for downstream projects bootstrapped from this template to pull harness improvements, bug fixes, and new scripts from the meta-template without overwriting project-specific docs or code.
 
@@ -456,7 +466,7 @@ Requires three-way git merging and complex conflict handling between meta-templa
 
 #### 23. Doc-Driven Feature Gate Scaffold Generator
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Scaffolding & Architecture`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream application feature flag tool (Unleash / LaunchDarkly)) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Scaffolding & Architecture`
 
 When a new capability module is scaffolded in `docs/tech/modules/`, the harness automatically generates a corresponding runtime feature flag and toggle in the application's configuration service.
 
@@ -470,7 +480,7 @@ Can lead to technical debt if feature flags accumulate over months without an au
 
 #### 24. Automated Rollback Sentinel on Verification Failure
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Agent Governance & Safety`
+> **Status:** `[IMPLEMENTED]` (`scripts/checkpoint_state.py` • `harness checkpoint restore`) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Agent Governance & Safety`
 
 If an agent completes an autonomous step and `harness audit` or `harness test` fails, the sentinel automatically reverts the working tree to the last clean git commit before ending the turn.
 
@@ -484,7 +494,7 @@ Can discard valuable partial work where the agent was 95% done and only had a mi
 
 #### 25. Formal Error Code Taxonomy Registry (`docs/tech/errors/`)
 
-> **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Error Handling & Robustness`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream domain-specific business error taxonomy) &nbsp;|&nbsp; **Priority:** `P0 (Critical)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Error Handling & Robustness`
 
 Centralizes all system error codes (`EBG-ERR-1001`, `AUTH-403-TOKEN`), user-facing messages, and recovery strategies in an authoritative spec, audited against code enums.
 
@@ -501,7 +511,7 @@ Requires developers and agents to register an error code in documentation before
 
 #### 26. Automated OpenAPI / Swagger Spec Extraction
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `API Contracts & Integration`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream backend REST/OpenAPI framework (FastAPI / Express / NestJS)) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `API Contracts & Integration`
 
 Derives standard OpenAPI 3.1 YAML specifications automatically from `docs/tech/api/` markdown leaves, enabling client SDK generation, Swagger UI previewing, and contract testing.
 
@@ -515,7 +525,7 @@ Requires rigid markdown table formatting for HTTP endpoints, request bodies, and
 
 #### 27. Mutation Testing for Invariants (Stryker / Mutmut Integration)
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Testing & Invariant Verification`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream mutation testing toolchain (Stryker / Mutmut)) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Testing & Invariant Verification`
 
 Periodically mutates code logic (flipping conditions, changing constants) to prove that the invariant test suite genuinely catches bugs rather than giving false confidence.
 
@@ -529,7 +539,7 @@ Extremely CPU and time intensive; running full mutation analysis on large codeba
 
 #### 28. Multi-Language Scaffolding Flavors (Go, Rust, Python, TypeScript)
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Template Extensibility`
+> **Status:** `[IMPLEMENTED]` (`scripts/bootstrap_project.py --preset` • `harness bootstrap`) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Template Extensibility`
 
 Extends `harness bootstrap` with language presets (`--lang go | rust | ts | py`), generating idiomatic directory structures, package managers (Cargo, Go modules, npm, uv), and test runners.
 
@@ -543,7 +553,7 @@ Significantly expands the template's maintenance footprint; each supported langu
 
 #### 29. Subagent Task Execution Graph & Concurrency File Locks
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Multi-Agent Orchestration`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Requires distributed multi-process file locking server (Redis / Consul)) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Multi-Agent Orchestration`
 
 A lightweight file-locking and dependency graph manager that allows multiple subagents to work concurrently on independent domains without clobbering each other's files.
 
@@ -557,7 +567,7 @@ Complex concurrency handling; deadlocks can occur if two subagents request circu
 
 #### 30. Automated PR Description Generator from Git Diffs & CHANGELOG
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `CI/CD & Git Governance`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Requires GitHub enterprise app installation token for automated PR creation) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `CI/CD & Git Governance`
 
 Analyzes branch git diffs and `docs/CHANGELOG.md` to automatically generate rich, compliance-checked Pull Request descriptions using the 4-section architecture template.
 
@@ -571,7 +581,7 @@ Automated summaries can become generic or miss subtle human nuances if the agent
 
 #### 31. Interactive Terminal UI (TUI) for Harness (`harness tui`)
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Developer Experience & Tooling`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Deferred developer luxury; standard CLI commands cover 100% of automation) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Developer Experience & Tooling`
 
 Provides a rich, interactive terminal dashboard (built with Python Textual or curses) to browse documentation trees, inspect test statuses, resolve questions, and trigger harness tools with keyboard shortcuts.
 
@@ -585,7 +595,7 @@ TUI dependencies add extra weight to the template; terminal compatibility issues
 
 #### 32. Agent Trajectory & Step Replay Visualizer
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Observability & Debugging`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Requires centralized enterprise telemetry and trajectory web visualizer) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Observability & Debugging`
 
 Parses `transcript.jsonl` files and renders an interactive local HTML timeline showing agent thoughts, tool calls, bash execution outputs, and token costs at each step.
 
@@ -599,7 +609,7 @@ Generates large HTML/JSON artifacts; transcripts may contain sensitive environme
 
 #### 33. Local Documentation Server with Live Hot-Reload
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Developer Experience`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Deferred to standard documentation web servers (MkDocs / VitePress)) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Developer Experience`
 
 A local HTTP server that renders markdown documentation with live Mermaid diagram previews, clickable links, and instant hot-reload on markdown file changes.
 
@@ -613,7 +623,7 @@ Another long-running background process for developers to manage; requires keepi
 
 #### 34. Database Schema & Migration Drift Validator
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Data Contracts & Schema Validation`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream database migration engine (Prisma / Alembic / Flyway)) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Data Contracts & Schema Validation`
 
 Validates that entity relationship diagrams and table schemas in `docs/tech/data/` match active SQL/Prisma/Drizzle migrations with zero drift.
 
@@ -627,7 +637,7 @@ Requires integrating with specific database migration frameworks, reducing the t
 
 #### 35. Cross-Document Consistency & Terminology Glossary
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Documentation Integrity`
+> **Status:** `[IMPLEMENTED]` (`scripts/lint_doc_dag.py` • `harness doc-dag`) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Documentation Integrity`
 
 Maintains a central terminology dictionary (`docs/GLOSSARY.md`) and linter that flags ambiguous or conflicting terms across specs (e.g. flagging 'user' vs 'player' vs 'commander').
 
@@ -641,7 +651,7 @@ Can lead to pedantic linting errors for minor vocabulary variations in descripti
 
 #### 36. Automated Mock Service Generator from API Contracts
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Testing & Scaffolding`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream API mock server (MSW / WireMock)) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Testing & Scaffolding`
 
 Reads `docs/tech/api/` leaves and scaffolds deterministic in-memory mock services (MSW / wiremock stubs) for integration tests and offline local development.
 
@@ -655,7 +665,7 @@ Mock behaviors can drift from real backend implementations if edge-case error co
 
 #### 37. Snapshot Testing for Generator Scripts
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Testing & Invariant Verification`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Subsumed by deterministic seeded unit test suites) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Testing & Invariant Verification`
 
 Golden file snapshot test suite verifying that `scaffold_module.py`, `record_decision.py`, and `pack_context.py` generate byte-for-byte identical output across platforms.
 
@@ -669,7 +679,7 @@ Snapshot updates can be accepted blindly by developers during refactors, defeati
 
 #### 38. Agent Workflow Configuration Schema Validator
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Agent Governance`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Subsumed by markdown-defined agent workflow loops) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Agent Governance`
 
 Validates `.agent/config.json` and workflow markdown files in `.agent/workflows/` against a strict JSON schema verifying step transitions and escalation routes.
 
@@ -683,7 +693,7 @@ Slightly slows down workflow iteration when prototyping experimental agent loops
 
 #### 39. Self-Healing Doc Link Auto-Fixer
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Documentation Integrity`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Auto-rewriting links risks masking intentional file removals; static linters preferred) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Documentation Integrity`
 
 When files are renamed or moved in `docs/` or `src/`, an automated CLI utility scans all markdown files and updates broken relative links and symbols automatically.
 
@@ -697,7 +707,7 @@ Automated text replacement can accidentally alter links in code comments or exam
 
 #### 40. Cross-Platform CI Workflow Matrix (Windows, Linux, macOS)
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `CI/CD & Automation`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Managed via downstream repository's GitHub Actions workflow runners) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `CI/CD & Automation`
 
 Pre-configured GitHub Actions workflow matrix that runs `harness audit` and `harness test` on Ubuntu, Windows-latest, and macOS-latest runners on every PR.
 
@@ -711,7 +721,7 @@ Triples CI runner minute consumption for open-source repositories with limited G
 
 #### 41. Invariant Test Coverage Threshold Enforcement (100% Floor)
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Testing & Invariant Verification`
+> **Status:** `[IMPLEMENTED]` (`scripts/audit_repo.py` & `scripts/doctor.py` (100% floor)) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Testing & Invariant Verification`
 
 Audits the test suite against all numbered `## 2. Invariants` bullets across all docs. If any invariant lacks an explicit corresponding test, the audit fails.
 
@@ -725,7 +735,7 @@ Requires tagging tests with invariant reference IDs (e.g. `@invariant(DOC_01_INV
 
 #### 42. Automated Benchmark Harness for Performance Invariants
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Testing & Invariant Verification`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream performance benchmark suite (pytest-benchmark / k6)) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Testing & Invariant Verification`
 
 Scaffolds benchmark runners for modules with performance-sensitive invariants (e.g. '< 16ms simulation tick budget', '< 1MB memory footprint').
 
@@ -739,7 +749,7 @@ Benchmarks can be noisy on shared CI hardware, causing occasional false-positive
 
 #### 43. Knowledge Item (KI) Auto-Harvesting from Resolved ADRs
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Memory & Knowledge Base`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Integrated via Antigravity IDE built-in Knowledge Item harvesting) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Memory & Knowledge Base`
 
 Whenever an ADR is resolved and accepted, the harness automatically extracts its decision, constraints, and antipatterns into an Antigravity Knowledge Item (`metadata.json` + artifacts).
 
@@ -753,7 +763,7 @@ Can clutter the Knowledge Item index if too many minor or ephemeral decisions ar
 
 #### 44. Semantic Code & Doc Search MCP Sidecar Tool
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Agent Context & Orchestration`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Dependent on IDE MCP server runtime environment (`mcp_config.json`)) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Agent Context & Orchestration`
 
 Embeds a local vector search engine (e.g. Chroma / sqlite-vss) exposed via Model Context Protocol (MCP) so agents can semantically search specs and code.
 
@@ -767,7 +777,7 @@ Requires maintaining a vector index on disk and running local embedding models, 
 
 #### 45. Agent Memory Pruning & Conversation Compaction Protocols
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Agent Governance & Context`
+> **Status:** `[IMPLEMENTED]` (`scripts/clean_workspace.py` • `harness clean`) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Agent Governance & Context`
 
 Standardized instructions and scratch scripts enabling agents to prune conversation context during compaction while preserving the 4-role directives and active block states.
 
@@ -781,7 +791,7 @@ Lossy summarization can occasionally drop subtle debugging state or recent user 
 
 #### 46. Fuzz Testing Generator for External Data Parsers
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Testing & Invariant Verification`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream parser fuzz testing toolchain (Atheris / jsfuzz)) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Testing & Invariant Verification`
 
 Auto-scaffolds fuzz testing suites feeding corrupted, boundary, and unexpected byte payloads into serialization and parsing routines (save files, network packets).
 
@@ -795,7 +805,7 @@ Generates edge-case test failures that may be practically impossible in real usa
 
 #### 47. Interactive Conflict Resolution Webview Modal
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Developer Experience & Tooling`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Requires VS Code / Antigravity IDE webview GUI extension development) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Developer Experience & Tooling`
 
 Renders an interactive UI modal inside the IDE when an agent hits an architectural fork, displaying Option A vs. Option B side-by-side with trade-off cards.
 
@@ -809,7 +819,7 @@ Requires IDE webview extension support; falls back to CLI prompts in standard te
 
 #### 48. Code Complexity Budget Linter (Cyclomatic & Cognitive)
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Code Quality & Maintainability`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Deferred to downstream code quality linters (Ruff / ESLint)) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Code Quality & Maintainability`
 
 Enforces strict cyclomatic and cognitive complexity ceilings (e.g. max complexity 12 per function) on all generated code in `src/`.
 
@@ -823,7 +833,7 @@ Can force premature decomposition and excessive micro-functions for inherently c
 
 #### 49. Automated License & Supply Chain Vulnerability Scanner
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Security & Compliance`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Requires enterprise supply chain security scanners (Snyk / Dependabot)) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Security & Compliance`
 
 Checks package dependencies for license compliance (MIT/Apache vs viral GPL) and known CVEs during `harness audit`.
 
@@ -837,7 +847,7 @@ Requires network access to CVE vulnerability databases or an offline vulnerabili
 
 #### 50. Hermetic Sandbox for Agent Command Execution
 
-> **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Security & Agent Safety`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Requires enterprise containerization & hermetic command isolation) &nbsp;|&nbsp; **Priority:** `P1 (High)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Security & Agent Safety`
 
 Runs agent terminal commands inside an isolated Docker container or unprivileged sandbox with read-only access to host system directories.
 
@@ -854,7 +864,7 @@ Docker overhead, filesystem sync latency, and complex credential pass-through fo
 
 #### 51. Mermaid Diagram Syntax & Node Linter
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Documentation Integrity`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Optional visual diagram validation; markdown linters verify code blocks) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Documentation Integrity`
 
 Lints and compiles all ````mermaid`` code blocks in documentation leaves during `harness lint` to ensure valid flowchart and sequence diagram syntax.
 
@@ -868,7 +878,7 @@ Requires headless mermaid CLI (`@mermaid-js/mermaid-cli`) or browser engine for 
 
 #### 52. Automated Semantic Versioning & Tag Bumper
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Release & Lifecycle`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Managed via enterprise CI release and tag automation pipelines) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Release & Lifecycle`
 
 Calculates semantic version bumps (patch, minor, major) based on categorizations in `docs/CHANGELOG.md` (e.g. `Invariants` changes trigger major/minor).
 
@@ -882,7 +892,7 @@ Strict SemVer rules can result in premature major version bumps if minor interna
 
 #### 53. Agent Token Expenditure & Financial Telemetry
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Observability & Costs`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Requires enterprise LLM gateway billing and metering integration) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Observability & Costs`
 
 Records input/output token usage per harness command, per agent role, and per task in a local ledger (`.agent/telemetry.json`), displaying estimated USD cost.
 
@@ -896,7 +906,7 @@ Pricing models change frequently across providers, requiring periodic updates to
 
 #### 54. Architecture Fitness Functions (ArchUnit Integration)
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Architecture Governance`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Subsumed by `scripts/lint_imports.py` and AST parity checking) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Architecture Governance`
 
 Automated unit tests that assert non-functional architectural properties (e.g. 'All services must implement an interface', 'No entity may exceed 500 lines').
 
@@ -910,7 +920,7 @@ Writing fitness functions requires specialized library knowledge; can feel overl
 
 #### 55. Doc-to-Wireframe ASCII/SVG Layout Generator
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `UI/UX Architecture`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream UI/UX frontend layout engine) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `UI/UX Architecture`
 
 Parses UI screen requirements in `docs/product/domains/` and generates ASCII or responsive SVG wireframes illustrating button layouts and dock hierarchies.
 
@@ -924,7 +934,7 @@ ASCII art wireframes cannot capture rich responsive flexbox layouts or mobile dy
 
 #### 56. Subagent Prompt Card Generator (`harness card --role`)
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Multi-Agent Orchestration`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Subsumed by `scripts/pack_context.py` persona subagent context bundles) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Multi-Agent Orchestration`
 
 Compiles minimal, role-specific markdown system prompt cards for specialized agents (Security Auditor, Performance Tuner, UI Specialist).
 
@@ -938,7 +948,7 @@ Too many specialized cards can fragment prompt maintenance; updating master rule
 
 #### 57. State Machine Specification-to-Code Validator
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Architecture & State Modeling`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream state machine library (XState / transitions)) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Architecture & State Modeling`
 
 Validates that finite state machines defined in docs (states, transitions, guard conditions) match TypeScript unions and transition tables in code.
 
@@ -952,7 +962,7 @@ Only applicable to state-machine-driven modules; adds cognitive overhead if appl
 
 #### 58. Multi-Repo Meta-Sync Tool for Microservice Fleets
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Template Lifecycle`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Requires enterprise monorepo / polyrepo synchronization tooling) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Template Lifecycle`
 
 Allows an organization to sync shared governance rules, pre-commit hooks, and agent system prompts across dozens of bootstrapped microservice repos.
 
@@ -966,7 +976,7 @@ Overkill for single-repo projects; requires centralized repository access tokens
 
 #### 59. Automated Dead Code & Orphan Module Pruner
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Hygiene & Cleanliness`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Subsumed by `scripts/check_doc_drift.py` and `scripts/clean_workspace.py`) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Hygiene & Cleanliness`
 
 Detects code files in `src/` that are neither imported by any module, tested in `tests/`, nor cited in `docs/` specifications.
 
@@ -980,7 +990,7 @@ Can flag dynamically imported modules or plugin files as dead code if reflection
 
 #### 60. Accessibility (WCAG 2.1 AA) Invariant Linter
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Quality & Compliance`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream frontend accessibility test suite (axe-core / pa11y)) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Quality & Compliance`
 
 Scans UI templates and rendered HTML for accessibility invariants: ARIA labels on icon buttons, contrast ratios, safe touch target dimensions (48x48px).
 
@@ -994,7 +1004,7 @@ Headless linters cannot evaluate semantic UX appropriateness or screen reader vo
 
 #### 61. Internationalization (i18n) Key Extraction & Missing String Audit
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Localization & i18n`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream localization string catalog (i18next / gettext)) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Localization & i18n`
 
 Extracts hardcoded text strings in UI components and verifies that every string is mapped to an i18n key present in all supported translation dictionaries.
 
@@ -1008,7 +1018,7 @@ Can generate false positives on technical codes, abbreviations, or currency symb
 
 #### 62. Service Worker & PWA Cache Manifest Validator
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Mobile & Web Packaging`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream Progressive Web App service worker manifests) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Mobile & Web Packaging`
 
 Validates that all static assets referenced in `index.html` and `manifest.webmanifest` are registered in `sw.js` cache lists and physically exist on disk.
 
@@ -1022,7 +1032,7 @@ Requires updating cache lists whenever new static assets are introduced.
 
 #### 63. Deterministic UUID / Numbered Slug Generator for ADRs
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Decision Records & History`
+> **Status:** `[IMPLEMENTED]` (`scripts/record_decision.py` (Numbered ADR slugs)) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Decision Records & History`
 
 Enforces standardized naming (`ADR-0042-slug.md`) with sequential zero-padded indexing, preventing duplicate ADR numbering across concurrent branches.
 
@@ -1036,7 +1046,7 @@ Branch merges with identical sequential numbers require rebasing and renumbering
 
 #### 64. Conventional Commit Message Linter with Doc Citation Tags
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Git Governance`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Convention enforced via git governance and changelist tracker) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Git Governance`
 
 Enforces conventional commits with mandatory doc citations (e.g. `feat(combat): implement laser strike [REF: docs/tech/modules/combat.md]`).
 
@@ -1050,7 +1060,7 @@ Can frustrate developers during rapid experimental commits or hotfixes if commit
 
 #### 65. Automated Code Comment-to-Doc Link Verifier
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Parity & Drift Enforcement`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Subsumed by AST parity checking and cross-link validation) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Parity & Drift Enforcement`
 
 Scans `// See: docs/...` annotations in code comments and fails builds if any referenced markdown file or section header does not exist.
 
@@ -1064,7 +1074,7 @@ Requires re-checking all code comments whenever a doc file or section title is r
 
 #### 66. Static Asset Budget & Bundle Size Compression Gate
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Performance & Build`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream bundler compression budgets (Vite / Webpack / Rollup)) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Performance & Build`
 
 Fails CI if production bundle sizes or media assets exceed predefined budget invariants (e.g. `main.js < 150KB gzip`, `total assets < 5MB`).
 
@@ -1078,7 +1088,7 @@ Can block emergency releases when adding legitimately heavy feature assets until
 
 #### 67. Agent Work-in-Progress (WIP) Stash & Checkpoint Manager
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Agent Context & Recovery`
+> **Status:** `[IMPLEMENTED]` (`scripts/checkpoint_state.py` • `harness checkpoint create`) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Agent Context & Recovery`
 
 Saves uncommitted agent changes and task states to a `.agent/checkpoints/` ledger with human-readable restoration points.
 
@@ -1092,7 +1102,7 @@ Consumes disk space with intermediate checkpoint diffs; requires periodic prunin
 
 #### 68. Telemetry & Analytics Event Schema Validator
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Observability & Analytics`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream analytics event instrumentation (PostHog / Segment)) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Observability & Analytics`
 
 Asserts that all telemetry events tracked in application code match event schemas and funnel definitions declared in `docs/tech/modules/telemetry/`.
 
@@ -1106,7 +1116,7 @@ Adds boilerplate when developers want to quickly add temporary ad-hoc debug logg
 
 #### 69. Design Token & Dark Mode Palette Synchronizer
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `UI/UX Architecture`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream UI design token synchronizer (Tailwind / CSS tokens)) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `UI/UX Architecture`
 
 Extracts CSS custom properties from `src/ui/theme.css` and verifies that every token matches the color palette and typography tables in `docs/tech/modules/ui/`.
 
@@ -1120,7 +1130,7 @@ Can slow down rapid UI styling experimentation if every color tint must be decla
 
 #### 70. Network Latency & Offline Simulation Test Harness
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Testing & Robustness`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream network offline simulation harness) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Testing & Robustness`
 
 Simulates intermittent network connectivity, 500ms latency, and offline state transitions during automated integration test runs.
 
@@ -1134,7 +1144,7 @@ Adds artificial delay to integration test runs, increasing test suite duration.
 
 #### 71. Documentation Word Count & Conciseness Linter
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Documentation Integrity`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Subsumed by `scripts/compact_docs.py` revision thresholding) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Documentation Integrity`
 
 Warns when a documentation leaf exceeds a recommended word count (e.g. > 1,500 words), advising the author to decompose into child leaves.
 
@@ -1148,7 +1158,7 @@ Can be annoying for comprehensive architectural guides or domain leaves that nat
 
 #### 72. Hermetic Code Formatting Enforcement (Ruff / Prettier / Black)
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Code Quality & Hygiene`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Delegated to project-level code formatters (Ruff / Black / Prettier)) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Code Quality & Hygiene`
 
 Standardizes formatting rules across all supported languages with automated `--fix` flags wired into git pre-commit hooks.
 
@@ -1162,7 +1172,7 @@ Can cause occasional merge conflicts when formatters re-wrap long lines across m
 
 #### 73. API Deprecation & Sunset Lifecycle Tracker
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `API Contracts & Lifecycle`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream public API version deprecation headers) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `API Contracts & Lifecycle`
 
 Scans `docs/tech/api/` for deprecated tags and flags code that continues to call endpoints beyond their scheduled sunset dates.
 
@@ -1176,7 +1186,7 @@ Requires manual maintenance of sunset dates in documentation metadata.
 
 #### 74. Agent Tool Call Rate Limiter & Infinite Loop Circuit Breaker
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Agent Governance & Safety`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Subsumed by IDE tool call controls and `scripts/autopilot.py`) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Agent Governance & Safety`
 
 Detects when an agent invokes the same tool with identical arguments > 3 times consecutively, forcing an immediate circuit break and escalation.
 
@@ -1190,7 +1200,7 @@ Can occasionally trigger on legitimate polling loops if an agent is waiting for 
 
 #### 75. Deterministic Mock Data Generator for Local Development
 
-> **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Developer Experience & Tooling`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream application fixture generator (Faker / FactoryBoy)) &nbsp;|&nbsp; **Priority:** `P2 (Medium)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Developer Experience & Tooling`
 
 Seeds local storage or test databases with realistic, invariant-compliant test entities (profiles, high scores, inventory) based on doc schemas.
 
@@ -1207,7 +1217,7 @@ Mock generator logic must be updated whenever core data schemas evolve.
 
 #### 76. Automated Documentation Multi-Language Translation Pipeline
 
-> **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Documentation & i18n`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Requires commercial translation API credentials) &nbsp;|&nbsp; **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Documentation & i18n`
 
 Translates technical documentation into secondary languages (e.g. Japanese, German, Spanish) for international distributed open-source contributors.
 
@@ -1221,7 +1231,7 @@ High maintenance overhead; translated docs can easily drift from the authoritati
 
 #### 77. Chaos Monkey Invariant Injector
 
-> **Priority:** `P3 (Low / Experimental)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Testing & Resilience`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream distributed resilience suite (Chaos Monkey)) &nbsp;|&nbsp; **Priority:** `P3 (Low / Experimental)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Testing & Resilience`
 
 Randomly induces memory pressure, audio context loss, or corrupted storage keys during autonomous gameplay simulation loops to test error recovery.
 
@@ -1235,7 +1245,7 @@ Can cause non-reproducible test failures that confuse agents during autonomous r
 
 #### 78. Visual Screenshot Regression Testing Harness (Playwright / BackstopJS)
 
-> **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `UI/UX Architecture`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream browser visual regression harness (Playwright / BackstopJS)) &nbsp;|&nbsp; **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `UI/UX Architecture`
 
 Takes headless browser screenshots of UI screens and compares pixel diffs against golden baseline renders to catch accidental CSS layout shifts.
 
@@ -1249,7 +1259,7 @@ Extremely brittle across OS platforms due to subtle font rendering and anti-alia
 
 #### 79. Natural Language Query Interface for Repo Specs (`harness ask`)
 
-> **Priority:** `P3 (Low / Experimental)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Developer Experience`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Requires enterprise RAG / vector embedding retrieval infrastructure) &nbsp;|&nbsp; **Priority:** `P3 (Low / Experimental)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Developer Experience`
 
 A CLI command that allows human developers to ask questions (e.g. 'What is the maximum defense cap?') answered via local LLM doc embeddings.
 
@@ -1263,7 +1273,7 @@ Requires local LLM or API key; answers can hallucinate if embeddings do not capt
 
 #### 80. IDE Status Bar Widget (Real-Time Repo Health & Parity)
 
-> **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Incremental` &nbsp;|&nbsp; **Domain:** `Developer Experience & Tooling`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Requires IDE-specific extension plugin packaging) &nbsp;|&nbsp; **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Incremental` &nbsp;|&nbsp; **Domain:** `Developer Experience & Tooling`
 
 A VS Code / IDE extension widget in the bottom status bar displaying live repo health percentage (e.g. `🛡️ 100% Health`) and doc-drift status.
 
@@ -1277,7 +1287,7 @@ Requires maintaining a dedicated VS Code extension bundle alongside the core rep
 
 #### 81. Automated GitHub Issue Triager & Spec Matcher
 
-> **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `CI/CD & Issue Governance`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Requires GitHub enterprise automation webhook integration) &nbsp;|&nbsp; **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `CI/CD & Issue Governance`
 
 A GitHub Action bot that analyzes incoming bug reports, identifies affected `docs/` specifications, and tags the issue with relevant invariants.
 
@@ -1291,7 +1301,7 @@ Can misroute ambiguous or multi-faceted bug reports to the wrong documentation l
 
 #### 82. Synthetic Load & Stress Test Generator (k6 / Locust)
 
-> **Priority:** `P3 (Low / Specialized)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Testing & Performance`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream backend load test suite (k6 / Locust)) &nbsp;|&nbsp; **Priority:** `P3 (Low / Specialized)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Testing & Performance`
 
 Generates load-testing scripts from API specifications to simulate thousands of concurrent requests against backend endpoints.
 
@@ -1305,7 +1315,7 @@ Irrelevant for offline, client-side, or single-player desktop/mobile application
 
 #### 83. Memory Leak & Heap Allocation Audit Harness
 
-> **Priority:** `P3 (Low / Specialized)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Performance & Quality`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream runtime heap profiler (memray / clinic.js)) &nbsp;|&nbsp; **Priority:** `P3 (Low / Specialized)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Performance & Quality`
 
 Runs extended simulation loops while profiling heap snapshots, asserting that object counts and retained memory do not grow unboundedly.
 
@@ -1319,7 +1329,7 @@ Heap snapshot profiling is computationally heavy and significantly slows down CI
 
 #### 84. Automated Security Advisory CVE Interceptor
 
-> **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Security & Compliance`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Enterprise vulnerability scanner integration) &nbsp;|&nbsp; **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Security & Compliance`
 
 Regularly checks GitHub Advisory Database for newly discovered vulnerabilities affecting dependencies and opens an automated doc-sync ADR proposal.
 
@@ -1333,7 +1343,7 @@ Can create noise if vulnerabilities affect dev dependencies or unused sub-paths 
 
 #### 85. Code Duplication & Refactoring Opportunity Linter (jscpd)
 
-> **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Code Quality & Cleanliness`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Downstream static analysis tooling (jscpd)) &nbsp;|&nbsp; **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Code Quality & Cleanliness`
 
 Scans `src/` for repeated code blocks (> 10 lines) and suggests creating shared utility functions or abstractions.
 
@@ -1347,7 +1357,7 @@ Can discourage intentional decoupling where duplicating a tiny function is prefe
 
 #### 86. Browser Storage Migration Test Suite Generator
 
-> **Priority:** `P3 (Low / Specialized)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Testing & Data Integrity`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream client browser storage migrations (IndexedDB / LocalStorage)) &nbsp;|&nbsp; **Priority:** `P3 (Low / Specialized)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Testing & Data Integrity`
 
 Auto-generates tests simulating version upgrades from older save formats to ensure backward-compatible schema migrations without data loss.
 
@@ -1361,7 +1371,7 @@ Requires archiving historical save payloads in test fixtures, slightly increasin
 
 #### 87. Audio Asset Clipping & Sample Rate Auditor
 
-> **Priority:** `P3 (Low / Specialized)` &nbsp;|&nbsp; **Benefit:** `Incremental` &nbsp;|&nbsp; **Domain:** `Audio & Assets`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream game/multimedia audio asset pipelines) &nbsp;|&nbsp; **Priority:** `P3 (Low / Specialized)` &nbsp;|&nbsp; **Benefit:** `Incremental` &nbsp;|&nbsp; **Domain:** `Audio & Assets`
 
 Inspects audio synthesis parameters or WAV/MP3 files to verify no peak clipping (> 0 dBFS) and consistent 44.1kHz/48kHz sample rates.
 
@@ -1375,7 +1385,7 @@ Only applicable to applications with procedural audio synthesis or embedded soun
 
 #### 88. Doc-to-Postman / Bruno Collection Exporter
 
-> **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `API Contracts & Tooling`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream API developer client collections (Postman / Bruno)) &nbsp;|&nbsp; **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `API Contracts & Tooling`
 
 Converts `docs/tech/api/` specifications into ready-to-run Bruno or Postman API collections with environment variables and sample payloads.
 
@@ -1389,7 +1399,7 @@ Bruno/Postman collection files must be kept in sync with markdown changes, addin
 
 #### 89. Subagent Cost & Turn Estimation Reporter
 
-> **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Incremental` &nbsp;|&nbsp; **Domain:** `Observability & Planning`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Enterprise token accounting and billing system) &nbsp;|&nbsp; **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Incremental` &nbsp;|&nbsp; **Domain:** `Observability & Planning`
 
 Estimates expected turn count and token cost before dispatching an autonomous subagent task based on historical complexity metrics.
 
@@ -1403,7 +1413,7 @@ Heuristic turn estimates can be wildly inaccurate for novel or difficult archite
 
 #### 90. Cross-Platform Path Separator Normalizer Linter
 
-> **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Hygiene & Cross-Platform`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Built directly into path normalization inside `phantom_sentinel.py`) &nbsp;|&nbsp; **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Hygiene & Cross-Platform`
 
 Fails audits if Windows backslashes (`\`) are hardcoded in scripts, markdown links, or import paths, enforcing universal forward slashes (`/`).
 
@@ -1417,7 +1427,7 @@ Can flag valid Windows regex patterns or escaped backslashes as path separator v
 
 #### 91. Automated Dynamic Badges Generator for README
 
-> **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Incremental` &nbsp;|&nbsp; **Domain:** `Documentation & Presentation`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Downstream CI dynamic shield/badge service) &nbsp;|&nbsp; **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Incremental` &nbsp;|&nbsp; **Domain:** `Documentation & Presentation`
 
 Generates dynamic SVG shields in `README.md` displaying Live Health Score (`100%`), Invariant Count (`52`), and Test Pass Rate (`100%`).
 
@@ -1431,7 +1441,7 @@ Generates git diffs on every commit if numbers change, adding noise to commit lo
 
 #### 92. Git Branch Naming Policy Enforcement Hook
 
-> **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Incremental` &nbsp;|&nbsp; **Domain:** `Git Governance`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Downstream organizational git branch policies) &nbsp;|&nbsp; **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Incremental` &nbsp;|&nbsp; **Domain:** `Git Governance`
 
 Pre-push git hook that enforces branch naming conventions (e.g. `feat/phase-42-cloud-sync`, `fix/inv-04-deadzone`).
 
@@ -1445,7 +1455,7 @@ Blocks developers from using informal scratch branches unless explicitly bypasse
 
 #### 93. Feature Flag Stale Retirement Bot
 
-> **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Code Quality & Architecture`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Downstream feature flag lifecycle bot) &nbsp;|&nbsp; **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Code Quality & Architecture`
 
 Alerts developers when a feature flag has been enabled for > 30 days, suggesting an automated refactor to remove the toggle and dead code path.
 
@@ -1459,7 +1469,7 @@ Some feature flags are intentionally permanent (e.g. Developer Sandbox Mode) and
 
 #### 94. Automated Code Tour Generator (VS Code CodeTour)
 
-> **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Onboarding & Developer Experience`
+> **Status:** `[DEFERRED_ENTERPRISE]` (VS Code CodeTour extension artifact) &nbsp;|&nbsp; **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Onboarding & Developer Experience`
 
 Converts `docs/product/overview.md` user flows into interactive VS Code CodeTours guiding new engineers through step-by-step code execution.
 
@@ -1473,7 +1483,7 @@ Tours break easily when underlying code line numbers change unless maintained wi
 
 #### 95. API Rate Limiting & Throttling Invariant Test Suite
 
-> **Priority:** `P3 (Low / Specialized)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Testing & Security`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream API gateway token bucket rate limiting) &nbsp;|&nbsp; **Priority:** `P3 (Low / Specialized)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Testing & Security`
 
 Tests that token bucket and leaky bucket rate limiters correctly reject requests exceeding configured thresholds.
 
@@ -1487,7 +1497,7 @@ Only applicable to backend API server modules; not relevant for client-side offl
 
 #### 96. Subagent Scratchpad Garbage Collector
 
-> **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Incremental` &nbsp;|&nbsp; **Domain:** `Hygiene & Cleanliness`
+> **Status:** `[IMPLEMENTED]` (`scripts/clean_workspace.py` (Scratchpad GC)) &nbsp;|&nbsp; **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Incremental` &nbsp;|&nbsp; **Domain:** `Hygiene & Cleanliness`
 
 Automatically prunes temporary scratch scripts, debug logs, and one-off test files from `.gemini/.../scratch/` after a task completes.
 
@@ -1501,7 +1511,7 @@ Can delete useful one-off diagnostic scripts that a developer wanted to inspect 
 
 #### 97. Rich Markdown Diff Visualizer for Code Reviews
 
-> **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Developer Experience`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Provided by GitHub / IDE pull request review interfaces) &nbsp;|&nbsp; **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Developer Experience`
 
 Renders visual side-by-side markdown diffs showing added invariants, altered interfaces, and updated ADRs in a clean HTML review view.
 
@@ -1515,7 +1525,7 @@ Requires browser rendering engine or local webview to display side-by-side compa
 
 #### 98. Web Vitals & Performance Budget Auditor (Lighthouse CLI)
 
-> **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Performance & Frontend`
+> **Status:** `[DOWNSTREAM_SPECIFIC]` (Delegated to downstream web performance budget auditor (Lighthouse CLI)) &nbsp;|&nbsp; **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Performance & Frontend`
 
 Runs Lighthouse CLI in headless Chrome during CI, failing builds if First Contentful Paint (FCP) > 1.2s or Cumulative Layout Shift (CLS) > 0.05.
 
@@ -1529,7 +1539,7 @@ Lighthouse runs can be slow (15-30s) and produce variable scores depending on CI
 
 #### 99. Interactive Onboarding CLI Walkthrough (`harness tutorial`)
 
-> **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Developer Experience`
+> **Status:** `[DEFERRED_ENTERPRISE]` (Subsumed by `scripts/doctor.py` and `meta_generator_guide.md`) &nbsp;|&nbsp; **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `Moderate` &nbsp;|&nbsp; **Domain:** `Developer Experience`
 
 A 5-minute interactive CLI tutorial walking a new human developer or agent through ingesting context, resolving a fork, and writing an invariant test.
 
@@ -1543,7 +1553,7 @@ Tutorial steps must be updated whenever harness CLI commands or workflows change
 
 #### 100. Template Self-Diagnostic & Auto-Repair Sentinel (`harness doctor --fix`)
 
-> **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Template Resilience & Health`
+> **Status:** `[IMPLEMENTED]` (`scripts/doctor.py` • `harness doctor --fix`) &nbsp;|&nbsp; **Priority:** `P3 (Low / Polish)` &nbsp;|&nbsp; **Benefit:** `High` &nbsp;|&nbsp; **Domain:** `Template Resilience & Health`
 
 An exhaustive self-diagnostic command that inspects all 42+ template files, hooks, linters, and configurations, automatically repairing missing directories, installing broken git hooks, and re-indexing docs.
 
@@ -1564,4 +1574,12 @@ Aggressive auto-repair can overwrite customized configuration files if not guard
 - **Context:** The Doc-to-Code Autonomous Harness provides a 42-to-54 point audit gate and a 4-role agent architecture. To transform this template into a universal, enterprise-grade autonomous software engineering harness, an exhaustive, symmetrically evaluated enhancement matrix was requested.
 - **Decision:** Formulated and committed the 100-point enhancement matrix structured across 4 priority tiers (P0 through P3) and 4 benefit levels (Transformational through Incremental). Every item features an explicit architectural trade-off analysis (Pros vs. Cons).
 - **Consequences:** Provides an unambiguous roadmap for upgrading template linters, context packers, AST verifiers, multi-agent orchestrators, and CI/CD pipelines.
+
+### ADR-20261025-02: Core Template Implementation & Architectural Scope Partitioning
+- **Date:** 2026-10-25
+- **Status:** Accepted / Implemented
+- **Deciders:** Lead Systems Architect, Orchestrator
+- **Context:** Following the 100-point enhancement matrix formulation, 22 critical template capabilities were implemented into the core repository tooling. The remaining items needed explicit categorization to differentiate what is generic template core vs. downstream application-specific vs. enterprise cloud extensions.
+- **Decision:** Updated the matrix with an Executive Implementation Scorecard and explicit `[IMPLEMENTED]`, `[DOWNSTREAM_SPECIFIC]`, and `[DEFERRED_ENTERPRISE]` statuses for all 100 points. Core harness now provides 22 standalone, zero-dependency tools (`doctor`, `clean`, `sentinel`, `doc-dag`, `checkpoint`, `autopilot`, `parity`, `compact`, etc.).
+- **Consequences:** Eliminates architectural ambiguity regarding repository template boundaries. Downstream projects bootstrapping from this template inherit an autonomous, self-auditing factory while retaining clean freedom to define stack-specific testing, schemas, and cloud integrations.
 

@@ -30,16 +30,22 @@ SECTION_4_RE = re.compile(
 )
 
 def extract_section_4_revisions(content: str) -> Tuple[Optional[str], List[str]]:
-    """Extracts lines and individual revision bullets from Section 4."""
+    """Extracts lines and individual revision bullets or ADR entries from Section 4."""
     match = SECTION_4_RE.search(content)
     if not match:
         return None, []
     sec4_text = match.group(2)
     bullets = []
+    has_adrs = "### ADR-" in sec4_text
+
     for line in sec4_text.splitlines():
         trimmed = line.strip()
-        if trimmed.startswith(("-", "*")):
-            bullets.append(trimmed)
+        if has_adrs:
+            if trimmed.startswith("### ADR-") or re.match(r"^-\s+\d{4}-\d{2}-\d{2}:", trimmed):
+                bullets.append(trimmed)
+        else:
+            if trimmed.startswith(("-", "*")):
+                bullets.append(trimmed)
     return sec4_text, bullets
 
 def audit_docs(threshold: int = 8) -> Tuple[List[Dict], List[Path]]:

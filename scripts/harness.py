@@ -74,6 +74,8 @@ def main():
     bootstrap_parser = subparsers.add_parser("bootstrap", help="Bootstrap a new downstream project")
     bootstrap_parser.add_argument("--name", required=True, help="Project name")
     bootstrap_parser.add_argument("--description", default="New project bootstrapped from agentic template", help="Project description")
+    bootstrap_parser.add_argument("--preset", choices=["web", "backend", "game", "cli", "library"], help="Framework architecture preset")
+    bootstrap_parser.add_argument("--target-dir", help="Target directory to initialize")
 
     # Test-gen / invariants command
     testgen_parser = subparsers.add_parser("test-gen", help="Generate invariant test stubs from documentation")
@@ -137,6 +139,25 @@ def main():
     autopilot_parser.add_argument("--complete", "-c", help="Mark a task as completed in active roadmap")
     autopilot_parser.add_argument("--json", action="store_true", help="Output machine-readable JSON")
 
+    # Sentinel / Hallucination Trap command
+    sentinel_parser = subparsers.add_parser("sentinel", help="Scan for phantom files, broken imports, and hallucinated paths")
+    sentinel_parser.add_argument("--strict", action="store_true", help="Fail with non-zero exit code on any phantom reference")
+
+    # Doc-DAG command
+    doc_dag_parser = subparsers.add_parser("doc-dag", help="Audit documentation hierarchy, cross-references, and connectivity")
+    doc_dag_parser.add_argument("--strict", action="store_true", help="Fail on broken references or tier inversions")
+
+    # Doctor / Self-Diagnostic command
+    doctor_parser = subparsers.add_parser("doctor", help="Run comprehensive template self-diagnostics and auto-repair")
+    doctor_parser.add_argument("--fix", action="store_true", help="Automatically repair detected discrepancies")
+    doctor_parser.add_argument("--verbose", "-v", action="store_true", help="Verbose diagnostic output")
+
+    # Clean / Garbage collector command
+    clean_parser = subparsers.add_parser("clean", help="Workspace hygiene, cache cleaner, and scratchpad garbage collector")
+    clean_parser.add_argument("--dry-run", "-n", action="store_true", help="Preview deletions without deleting")
+    clean_parser.add_argument("--clean-checkpoints", action="store_true", help="Prune older checkpoints (retain last 5)")
+    clean_parser.add_argument("--verbose", "-v", action="store_true", help="Verbose clean output")
+
     args, unknown = parser.parse_known_args()
 
     if not args.command:
@@ -195,7 +216,12 @@ def main():
             cli_args.append("--check")
         sys.exit(run_script("generate_invariant_tests.py", cli_args + unknown))
     elif args.command == "bootstrap":
-        sys.exit(run_script("bootstrap_project.py", ["--name", args.name, "--description", args.description] + unknown))
+        cli_args = ["--name", args.name, "--description", args.description]
+        if args.preset:
+            cli_args += ["--preset", args.preset]
+        if args.target_dir:
+            cli_args += ["--target-dir", args.target_dir]
+        sys.exit(run_script("bootstrap_project.py", cli_args + unknown))
     elif args.command == "install-hooks":
         sys.exit(run_script("install_hooks.py", unknown))
     elif args.command == "changelist":
@@ -250,6 +276,28 @@ def main():
         if args.json:
             cli_args.append("--json")
         sys.exit(run_script("autopilot.py", cli_args + unknown))
+    elif args.command == "sentinel":
+        cli_args = ["--strict"] if args.strict else []
+        sys.exit(run_script("phantom_sentinel.py", cli_args + unknown))
+    elif args.command == "doc-dag":
+        cli_args = ["--strict"] if args.strict else []
+        sys.exit(run_script("lint_doc_dag.py", cli_args + unknown))
+    elif args.command == "doctor":
+        cli_args = []
+        if args.fix:
+            cli_args.append("--fix")
+        if args.verbose:
+            cli_args.append("--verbose")
+        sys.exit(run_script("doctor.py", cli_args + unknown))
+    elif args.command == "clean":
+        cli_args = []
+        if args.dry_run:
+            cli_args.append("--dry-run")
+        if args.clean_checkpoints:
+            cli_args.append("--clean-checkpoints")
+        if args.verbose:
+            cli_args.append("--verbose")
+        sys.exit(run_script("clean_workspace.py", cli_args + unknown))
 
 if __name__ == "__main__":
     main()

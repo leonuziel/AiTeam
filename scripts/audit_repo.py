@@ -38,6 +38,10 @@ CORE_FILES = [
     "scripts/scan_secrets.py",
     "scripts/autopilot.py",
     "scripts/lint_imports.py",
+    "scripts/phantom_sentinel.py",
+    "scripts/lint_doc_dag.py",
+    "scripts/doctor.py",
+    "scripts/clean_workspace.py",
     "scripts/lint_docs.py",
     "scripts/scaffold_module.py",
     "scripts/record_decision.py",
@@ -143,6 +147,16 @@ def audit():
     # 9. Architectural Dependency Boundary & Import Audit
     total_checks += 1
     if run_step("Architectural Dependency Boundary & Import Audit", ["scripts/lint_imports.py", "--strict"]):
+        passed_checks += 1
+
+    # 10. Phantom File Sentinel & Hallucination Audit
+    total_checks += 1
+    if run_step("Phantom File Sentinel & Hallucination Audit", ["scripts/phantom_sentinel.py", "--strict"]):
+        passed_checks += 1
+
+    # 11. Documentation Hierarchy & Cross-Reference Audit
+    total_checks += 1
+    if run_step("Documentation Hierarchy & Cross-Reference Audit", ["scripts/lint_doc_dag.py", "--strict"]):
         passed_checks += 1
 
     # Summary

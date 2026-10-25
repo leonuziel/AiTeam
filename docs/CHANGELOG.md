@@ -17,6 +17,12 @@ Related: docs/ARCHITECTURE.md, docs/operations/changelist.md
 ### [Unreleased]
 
 #### Added
+- **Core Template Tooling & 100-Point Matrix Scorecard:**
+  - **Category:** Added
+  - **Summary:** Implement core template tooling (doctor, clean, sentinel, doc-dag) and publish 100-point enhancement scorecard
+  - **Affected Specs:** docs/tech/template_enhancement_matrix_100.md
+  - **Affected Modules:** scripts/doctor.py,scripts/clean_workspace.py,scripts/phantom_sentinel.py,scripts/lint_doc_dag.py,scripts/harness.py,scripts/audit_repo.py
+  - **Decision Ref:** ADR-20261025-02
 - **Universal Test Runner, JSON Escalation, and Architectural Import Linter:**
   - **Category:** Added
   - **Summary:** Upgraded run_tests.py with seeds and timeouts, enhanced resolve_question.py with JSON packages, and implemented lint_imports.py for clean architecture
