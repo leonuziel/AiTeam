@@ -51,6 +51,7 @@ graph TD
 | [Data Schemas & Entities Contract](tech/data/schemas.md) | Technical Architecture - Data Layer & Persistence Models | Owns: Global entity definitions, canonical schema structures, database migration rules, and data transfer object (DTO) c... | docs/tech/overview.md, docs/tech/data/persistence.md |
 | [Subsystem Modules Architecture Guide](tech/modules/README.md) | Technical Architecture - Subsystem Modules Topology | Owns: Structural guidance and conventions for technical subsystem designs placed under docs/tech/modules/<module>/. | docs/tech/overview.md, docs/ARCHITECTURE.md |
 | [Technical Architecture Overview](tech/overview.md) | Global Technology Stack & Engineering Conventions | Owns: Baseline technology stack selection, cross-cutting architectural patterns, coding conventions, and global technica... | docs/ARCHITECTURE.md, docs/product/overview.md |
+| [Repository Template Enhancement Matrix (100 Points)](tech/template_enhancement_matrix_100.md) | Repository Template Architecture, Autonomous Agent Governance, Verification & Tooling | Purpose: Comprehensive, ordered roadmap of 100 concrete enhancements to elevate this Doc-to-Code Autonomous Harness repo... | [ARCHITECTURE.md](file:///d:/Workspace/AiTeam/docs/ARCHITECTURE.md), [INDEX.md](file:///d:/Workspace/AiTeam/docs/INDEX.md), [AGENTS.md](file:///d:/Workspace/AiTeam/AGENTS.md) |
 
 ## 4. Decisions & Revisions
-- 2026-10-24: Auto-generated living documentation index cataloging 14 specification leaves.
+- 2026-10-25: Auto-generated living documentation index cataloging 15 specification leaves.

@@ -17,6 +17,12 @@ Related: docs/ARCHITECTURE.md, docs/operations/changelist.md
 ### [Unreleased]
 
 #### Added
+- **100-Point Autonomous Harness Enhancement Matrix:**
+  - **Category:** Added
+  - **Summary:** Created exhaustive 100-point template enhancement matrix ordered by priority and benefit with symmetric pros/cons analysis
+  - **Affected Specs:** docs/tech/template_enhancement_matrix_100.md
+  - **Affected Modules:** tests/test_invariants.py
+  - **Decision Ref:** ADR-20261025-01
 - **Changelist Tracking Framework:**
   - **Category:** Added
   - **Summary:** Introduced automated changelist tracking tooling (`scripts/track_changelist.py`, `harness changelist`), operational specification (`docs/operations/changelist.md`), and living ledger (`docs/CHANGELOG.md`).
